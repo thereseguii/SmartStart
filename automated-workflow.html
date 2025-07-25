@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Automated Workflow</title>
+  <title>Automated Task & Document Processing</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 <body class="bg-[#F4F3F0] text-[#1a1a1a]">
+
 <!-- Navbar -->
-<header class="bg-white border-b px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+<header class="fixed top-0 left-0 right-0 bg-white border-b px-6 py-4 flex items-center justify-between z-50">
   <div class="flex items-center space-x-3">
     <a href="Landing_Page.html" class="relative group w-10 h-10">
       <!-- SmartStart logo (visible by default) -->
@@ -19,8 +19,7 @@
 
       <!-- Back icon (visible on hover) -->
       <div class="w-10 h-10 flex items-center justify-center rounded-[10px] bg-[#D4B536] text-white opacity-0 group-hover:opacity-100 transition duration-200 absolute inset-0">
-        <!-- Left arrow SVG -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       </div>
@@ -28,141 +27,246 @@
 
     <div class="flex flex-col justify-center leading-tight">
       <h1 class="font-semibold text-lg text-[#b91c1c]">SmartStart</h1>
-      <p class="text-sm text-gray-500">Contextual Assistance</p>
+      <p class="text-sm text-gray-500">Automated Task & Document Processing</p>
     </div>
   </div>
 </header>
 
-<!-- Main Layout -->
-<main class="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto px-4 py-8">
-  <!-- Left Column -->
-  <div class="flex-1 space-y-6">
-    <!-- Welcome Banner -->
-    <div class="bg-white border rounded-xl shadow p-6">
-      <div class="border-l-8 border-red-700 pl-4">
-        <h2 class="text-2xl font-bold mb-1">Welcome to SmartStart</h2>
-        <p class="text-gray-600 text-sm">Upload documents or complete tasks to trigger instant auto-approvals and fast-track your onboarding.</p>
+
+<!-- Main Container -->
+<main class="max-w-7xl mx-auto px-4 py-6 pt-28">
+  <div class="grid lg:grid-cols-4 gap-6">
+
+    <!-- Left Side (col-span-3) -->
+    <div class="lg:col-span-3 space-y-6">
+      <!-- Welcome Card with Red Offset Shadow -->
+      <div class="relative max-w-5xl mx-auto">
+        <!-- Red background shadow -->
+        <div class="absolute bottom right-1.5 w-full h-full bg-[#AF0E0E] rounded-xl z-0"></div>
+        <!-- White card on top -->
+        <div class="relative bg-white p-6 rounded-xl z-10" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);">
+          <h2 class="text-4xl font-bold text-[#b91c1c]">Welcome to SmartStart</h2>
+          <p class="text-sm text-gray-600 mt-2">Upload documents or complete tasks to trigger instant auto-approvals and fast-track your onboarding.</p>
+        </div>
       </div>
+
+      <!-- Recent Updates -->
+      <section class="space-y-3">
+        <div class="flex items-center gap-2">
+          <!-- Combined bell + circle icon -->
+          <img src="img/auto_fol/circ-bell.png" class="w-6 h-6" />
+
+          <h3 class="text-sm font-semibold text-gray-700">Recent Updates</h3>
+        </div>
+      </section>
+
+
+      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-300 flex gap-3">
+        <img src="img/auto_fol/notif-done.png" class="w-5 h-5 mt-1" />
+        <div>
+          <p class="text-green-600 text-sm font-medium">ID Verification Complete</p>
+          <p class="text-sm text-gray-600">✅ <i>Your ID has been approved. Email setup is now in progress.</i>
+            <span class="text-xs text-gray-400">5m ago</span>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-300 flex gap-3">
+        <img src="img/auto_fol/notif-req.png" class="w-5 h-5 mt-1" />
+        <div>
+          <p class="text-blue-600 text-sm font-medium">System Access Request</p>
+          <p class="text-sm text-gray-600">📧 <i>Your system access request is being processed. You'll receive an email confirmation shortly.</i>
+            <span class="text-xs text-gray-400">25m ago</span></p>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-3 gap-4">
+        <div class="h-32 text-center bg-white border rounded-lg py-8 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);">
+          <p class="text-4xl font-bold text-[#b91c1c]">0</p>
+          <p class="text-sm text-gray-500">Task completed</p>
+        </div>
+        <div class="h-32 text-center bg-white border rounded-lg py-8 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);">
+          <p class="text-4xl font-bold text-yellow-600">3</p>
+          <p class="text-sm text-gray-500">Auto-Approval Eligible</p>
+        </div>
+        <div class="h-32 text-center bg-white border rounded-lg py-8 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);">
+          <p class="text-4xl font-bold text-green-600">0</p>
+          <p class="text-sm text-gray-500">Auto-Approved</p>
+        </div>
+      </div>
+
+      <!-- Onboarding Tasks -->
+      <section class="mt-10">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Onboarding Tasks</h2>
+        <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
+          <!-- Upload Valid ID -->
+          <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);">
+            <div class="flex justify-between items-start mb-2 min-h-[3.5rem]">
+            <h3 class="font-semibold text-sm text-gray-800 leading-snug max-w-[80%]">
+                Upload Valid ID
+              </h3>
+              <img src="img/auto_fol/not_started.png" class="w-16 h-4 object-contain self-start" />
+            </div>
+            <p class="text-xs text-gray-500 mb-2">Upload government-issued ID for verification</p>
+            <div class="relative flex items-center mb-2 pl-5 bg-yellow-100 rounded-md py-1">
+              <img src="img/auto_fol/elig-app.png" class="absolute left-0 w-4 h-4 opacity-20" />
+              <img src="img/auto_fol/circ-elig.png" class="w-2 h-2 mr-1" />
+              <span class="text-xs text-yellow-600 font-medium">Eligible for Auto-Approval</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
+              <div class="bg-yellow-500 h-2 rounded-full w-0"></div>
+            </div>
+            <button class="bg-[#b91c1c] text-white w-full py-2 rounded text-sm font-medium">Upload Document</button>
+          </div>
+
+          <!-- Submit Pre-Employment Forms -->
+          <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);">
+            <div class="flex justify-between items-start mb-2 min-h-[3.5rem]">
+              <h3 class="font-semibold text-sm text-gray-800 leading-snug max-w-[80%]">
+                Submit Pre-Employment Forms
+              </h3>
+              <img src="img/auto_fol/not_started.png" class="w-16 h-4 object-contain self-start" />
+            </div>
+            <p class="text-xs text-gray-500 mb-2">Finalize all necessary HR forms</p>
+            <div class="relative flex items-center mb-2 pl-5 bg-yellow-100 rounded-md py-1">
+              <img src="img/auto_fol/elig-app.png" class="absolute left-0 w-4 h-4 opacity-20" />
+              <img src="img/auto_fol/circ-elig.png" class="w-2 h-2 mr-1" />
+              <span class="text-xs text-yellow-600 font-medium">Eligible for Auto-Approval</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
+              <div class="bg-yellow-500 h-2 rounded-full w-0"></div>
+            </div>
+            <button class="bg-[#b91c1c] text-white w-full py-2 rounded text-sm font-medium">Upload Document</button>
+          </div>
+
+          <!-- Request System Access -->
+          <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);">
+            <div class="flex justify-between items-start mb-2 min-h-[3.5rem]">
+              <h3 class="font-semibold text-sm text-gray-800 leading-snug max-w-[80%]">
+                Request System Access
+              </h3>
+              <img src="img/auto_fol/not_started.png" class="w-16 h-4 object-contain self-start" />
+            </div>
+            <p class="text-xs text-gray-500 mb-2">Get access to banking systems and applications</p>
+            <div class="relative flex items-center mb-2 pl-5 bg-yellow-100 rounded-md py-1">
+              <img src="img/auto_fol/elig-app.png" class="absolute left-0 w-4 h-4 opacity-20" />
+              <img src="img/auto_fol/circ-elig.png" class="w-2 h-2 mr-1" />
+              <span class="text-xs text-yellow-600 font-medium">Eligible for Auto-Approval</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
+              <div class="bg-yellow-500 h-2 rounded-full w-0"></div>
+            </div>
+            <button class="bg-[#b91c1c] text-white w-full py-2 rounded text-sm font-medium">Upload Document</button>
+          </div>
+
+          <!-- Activate Company Email -->
+          <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);">
+            <div class="flex justify-between items-start mb-2 min-h-[3.5rem]">
+              <h3 class="font-semibold text-sm text-gray-800 leading-snug max-w-[80%]">
+                Activate Company Email
+              </h3>
+              <img src="img/auto_fol/not_started.png" class="w-16 h-4 object-contain self-start" />
+            </div>
+            <p class="text-xs text-gray-500 mb-2">Finalize all necessary HR forms as part of the onboarding process</p>
+            <div class="relative flex items-center mb-2 pl-5 bg-yellow-100 rounded-md py-1">
+              <img src="img/auto_fol/elig-app.png" class="absolute left-0 w-4 h-4 opacity-20" />
+              <img src="img/auto_fol/circ-elig.png" class="w-2 h-2 mr-1" />
+              <span class="text-xs text-yellow-600 font-medium">Eligible for Auto-Approval</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
+              <div class="bg-yellow-500 h-2 rounded-full w-0"></div>
+            </div>
+            <button class="bg-[#b91c1c] text-white w-full py-2 rounded text-sm font-medium">Upload Document</button>
+          </div>
+
+          <!-- Request Equipment -->
+          <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);">
+            <div class="flex justify-between items-start mb-2 min-h-[3.5rem]">
+              <h3 class="font-semibold text-sm text-gray-800 leading-snug max-w-[80%]">
+                Request Equipment
+              </h3>
+              <img src="img/auto_fol/not_started.png" class="w-16 h-4 object-contain self-start" />
+            </div>
+            <p class="text-xs text-gray-500 mb-2">Request laptop, phone, and other work equipment</p>
+            <div class="relative flex items-center mb-2 pl-5 bg-yellow-100 rounded-md py-1">
+              <img src="img/auto_fol/elig-app.png" class="absolute left-0 w-4 h-4 opacity-20" />
+              <img src="img/auto_fol/circ-elig.png" class="w-2 h-2 mr-1" />
+              <span class="text-xs text-yellow-600 font-medium">Eligible for Auto-Approval</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
+              <div class="bg-yellow-500 h-2 rounded-full w-0"></div>
+            </div>
+            <button class="bg-[#b91c1c] text-white w-full py-2 rounded text-sm font-medium">Upload Document</button>
+          </div>
+
+        </div>
+      </section>
+
     </div>
 
-    <!-- Recent Updates -->
-    <div class="bg-white border rounded-xl shadow p-6">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold">Recent Updates</h3>
-        <img src="img/bell.png" alt="Bell Icon" class="w-5 h-5" />
+    <!-- Right Sidebar: Onboarding Progress -->
+    <aside class="sticky top-24 h-fit">
+      <div class="bg-white rounded-xl shadow p-4 lg:col-span-1">
+        <h3 class="text-lg font-semibold text-[#b91c1c] mb-1">Onboarding Progress</h3>
+        <p class="text-sm text-gray-600 mb-2">Overall progress</p>
+        <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+          <div class="bg-[#b91c1c] h-2 rounded-full w-0"></div>
+        </div>
+        <ul class="space-y-2">
+          <li class="flex items-start gap-3 p-3 rounded-md bg-gray-50 border border-gray-200">
+            <div class="flex items-start gap-3 opacity-60 hover:opacity-100 transition-opacity duration-300">
+            <img src="img/auto_fol/Circle.png" class="w-5 h-5 mt-1" />
+            <div>
+              <p class="text-sm font-medium text-gray-800">Welcome & Introduction</p>
+              <p class="text-xs text-gray-500">Complete initial onboarding welcome</p>
+            </div>
+              </div>
+          </li>
+          <li class="flex items-start gap-3 p-3 rounded-md bg-gray-50 border border-gray-200">
+            <div class="flex items-start gap-3 opacity-60 hover:opacity-100 transition-opacity duration-300">
+            <img src="img/auto_fol/Circle.png" class="w-5 h-5 mt-1" />
+            <div>
+              <p class="text-sm font-medium text-gray-800">Document Verification</p>
+              <p class="text-xs text-gray-500">Upload and verify required documents</p>
+            </div>
+            </div>
+          </li>
+          <li class="flex items-start gap-3 p-3 rounded-md bg-gray-50 border border-gray-200">
+            <div class="flex items-start gap-3 opacity-60 hover:opacity-100 transition-opacity duration-300">
+            <img src="img/auto_fol/Circle.png" class="w-5 h-5 mt-1" />            <div>
+              <p class="text-sm font-medium text-gray-800">System & Account Setup</p>
+              <p class="text-xs text-gray-500">Configure accounts and system access</p>
+            </div>
+            </div>
+          </li>
+          <li class="flex items-start gap-3 p-3 rounded-md bg-gray-50 border border-gray-200">
+            <div class="flex items-start gap-3 opacity-60 hover:opacity-100 transition-opacity duration-300">
+            <img src="img/auto_fol/Circle.png" class="w-5 h-5 mt-1" />
+            <div>
+              <p class="text-sm font-medium text-gray-800">Compliance Training</p>
+              <p class="text-xs text-gray-500">Complete mandatory training modules</p>
+            </div>
+            </div>
+          </li>
+          <li class="flex items-start gap-3 p-3 rounded-md bg-gray-50 border border-gray-200">
+            <div class="flex items-start gap-3 opacity-60 hover:opacity-100 transition-opacity duration-300">
+            <img src="img/auto_fol/Circle.png" class="w-5 h-5 mt-1" />
+            <div>
+              <p class="text-sm font-medium text-gray-800">Final Review & Approval</p>
+              <p class="text-xs text-gray-500">Manager review and final onboarding approval</p>
+            </div>
+            </div>
+          </li>
+        </ul>
       </div>
+    </aside>
 
-      <div class="space-y-3">
-        <div class="bg-green-100 text-green-800 text-sm px-4 py-3 rounded flex items-center gap-2">
-          <img src="img/check.png" alt="Check Icon" class="w-5 h-5" />
-          <div>ID Verification Complete — Your ID has been approved. Email setup is now in progress. <span class="text-gray-400 ml-2">1m ago</span></div>
-        </div>
-
-        <div class="bg-blue-50 text-blue-800 text-sm px-4 py-3 rounded flex items-center gap-2">
-          <img src="img/info.png" alt="Blue Info Icon" class="w-5 h-5" />
-          <div>System Access Request — Your request is being processed. You'll receive an email confirmation shortly. <span class="text-gray-400 ml-2">25m ago</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="flex gap-4 text-center">
-      <div class="flex-1 bg-white rounded-xl border shadow py-6">
-        <div class="text-3xl font-bold">1</div>
-        <div class="text-sm text-gray-500">Task Completed</div>
-      </div>
-      <div class="flex-1 bg-white rounded-xl border shadow py-6">
-        <div class="text-3xl font-bold">3</div>
-        <div class="text-sm text-gray-500">Auto-Approval Eligible</div>
-      </div>
-      <div class="flex-1 bg-white rounded-xl border shadow py-6">
-        <div class="text-3xl font-bold">1</div>
-        <div class="text-sm text-gray-500">Auto-Approved</div>
-      </div>
-    </div>
-
-    <!-- Onboarding Tasks -->
-    <section class="grid md:grid-cols-2 gap-6">
-      <!-- Upload Valid ID -->
-      <div class="bg-white border rounded-xl shadow p-5 space-y-3">
-        <div class="flex items-center gap-3">
-          <img src="img/id.png" class="w-6 h-6" alt="Task Icon" />
-          <h4 class="font-semibold">Upload Valid ID</h4>
-          <span class="ml-auto text-green-700 text-sm">✅ Approved</span>
-        </div>
-        <p class="text-sm text-gray-600 ml-9">Government-issued ID uploaded successfully.</p>
-        <div class="flex items-center gap-2 ml-9">
-          <div class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">Eligible for Auto-Approval</div>
-        </div>
-        <div class="text-sm text-green-600 ml-9">✔ Task completed successfully</div>
-      </div>
-
-      <!-- Submit Pre-Employment Forms -->
-      <div class="bg-white border rounded-xl shadow p-5 space-y-3">
-        <div class="flex items-center gap-3">
-          <img src="img/form.png" class="w-6 h-6" alt="Form Icon" />
-          <h4 class="font-semibold">Submit Pre-Employment Forms</h4>
-        </div>
-        <div class="ml-9 text-sm text-gray-600">Final & necessary HR forms required.</div>
-        <div class="ml-9 flex items-center gap-2">
-          <div class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">Eligible for Auto-Approval</div>
-        </div>
-        <button class="ml-9 mt-2 bg-red-700 text-white rounded px-4 py-2 flex items-center gap-2">
-          <img src="img/upload.png" class="w-4 h-4" alt="Upload Icon" /> Upload Document
-        </button>
-      </div>
-
-      <!-- Request System Access -->
-      <div class="bg-white border rounded-xl shadow p-5 space-y-3">
-        <div class="flex items-center gap-3">
-          <img src="img/system.png" class="w-6 h-6" alt="System Icon" />
-          <h4 class="font-semibold">Request System Access</h4>
-        </div>
-        <div class="ml-9 text-sm text-gray-600">Access to internal platforms like HRIS, Payroll, etc.</div>
-        <div class="ml-9 flex items-center gap-2">
-          <div class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">Eligible for Auto-Approval</div>
-        </div>
-        <button class="ml-9 mt-2 bg-red-700 text-white rounded px-4 py-2 flex items-center gap-2">
-          <img src="img/upload.png" class="w-4 h-4" alt="Upload Icon" /> Upload Document
-        </button>
-      </div>
-
-      <!-- Activate Company Email -->
-      <div class="bg-white border rounded-xl shadow p-5 space-y-3">
-        <div class="flex items-center gap-3">
-          <img src="img/email.png" class="w-6 h-6" alt="Email Icon" />
-          <h4 class="font-semibold">Activate Company Email</h4>
-        </div>
-        <div class="ml-9 text-sm text-gray-600">Setup your official email to start receiving updates.</div>
-        <div class="ml-9 flex items-center gap-2">
-          <div class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">Eligible for Auto-Approval</div>
-        </div>
-        <button class="ml-9 mt-2 bg-red-700 text-white rounded px-4 py-2 flex items-center gap-2">
-          <img src="img/upload.png" class="w-4 h-4" alt="Upload Icon" /> Upload Document
-        </button>
-      </div>
-    </section>
-  </div>
-
-  <!-- Right Sidebar -->
-  <aside class="space-y-4 sticky top-24 self-start w-full lg:w-1/3">
-    <div class="bg-white p-5 rounded-xl border shadow">
-      <h4 class="font-semibold mb-2">Onboarding Progress</h4>
-      <div class="text-sm text-gray-600 mb-3">Overall progress: <strong>20%</strong></div>
-      <ul class="space-y-2 text-sm">
-        <li class="bg-green-100 text-green-800 rounded-md px-3 py-1 font-medium">Welcome & Introduction</li>
-        <li class="bg-yellow-100 text-yellow-800 rounded-md px-3 py-1 font-medium">Document Verification</li>
-        <li class="bg-gray-100 text-gray-600 rounded-md px-3 py-1">System & Account Setup</li>
-        <li class="bg-gray-100 text-gray-600 rounded-md px-3 py-1">Compliance Training</li>
-        <li class="bg-gray-100 text-gray-600 rounded-md px-3 py-1">Final Review & Approval</li>
-      </ul>
-    </div>
-  </aside>
 </main>
 
 <!-- Footer -->
-<footer class="bg-white text-center text-gray-500 text-sm py-4 border-t">
-  Powered by <strong class="text-[#b91c1c]">SmartStart</strong> — A BPI Innovation
+<footer class="bg-white text-center text-gray-500 text-sm py-4 border-t mt-10">
+  Powered by <span class="text-[#b91c1c] font-semibold">SmartStart</span> — A BPI Innovation
 </footer>
+
 </body>
 </html>
