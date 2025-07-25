@@ -55,50 +55,59 @@
         <div class="flex items-center gap-2">
           <!-- Combined bell + circle icon -->
           <img src="img/auto_fol/circ-bell.png" class="w-6 h-6" />
-
           <h3 class="text-sm font-semibold text-gray-700">Recent Updates</h3>
         </div>
       </section>
 
-
-      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-300 flex gap-3">
+      <!-- Update Card 1 -->
+      <div class="ml-5 w-[55rem] bg-white rounded-lg shadow-sm px-6 py-3 border border-gray-300 flex gap-3">
         <img src="img/auto_fol/notif-done.png" class="w-5 h-5 mt-1" />
         <div>
           <p class="text-green-600 text-sm font-medium">ID Verification Complete</p>
-          <p class="text-sm text-gray-600">✅ <i>Your ID has been approved. Email setup is now in progress.</i>
-            <span class="text-xs text-gray-400">5m ago</span>
+          <p class="text-sm text-gray-600">
+            ✅ <i>Your ID has been approved. Email setup is now in progress.</i>
+            <span class="block text-xs text-gray-400 mt-1">5m ago</span>
+          </p>
         </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-300 flex gap-3">
+      <!-- Update Card 2 -->
+      <div class="ml-5 w-[55rem] bg-white rounded-lg shadow-sm px-6 py-3 border border-gray-300 flex gap-3">
         <img src="img/auto_fol/notif-req.png" class="w-5 h-5 mt-1" />
         <div>
           <p class="text-blue-600 text-sm font-medium">System Access Request</p>
-          <p class="text-sm text-gray-600">📧 <i>Your system access request is being processed. You'll receive an email confirmation shortly.</i>
-            <span class="text-xs text-gray-400">25m ago</span></p>
+          <p class="text-sm text-gray-600">
+            📧 <i>Your system access request is being processed. You'll receive an email confirmation shortly.</i>
+            <span class="block text-xs text-gray-400 mt-1">25m ago</span>
+          </p>
         </div>
       </div>
 
+
       <!-- Stats -->
-      <div class="grid grid-cols-3 gap-4">
-        <div class="h-32 text-center bg-white border rounded-lg py-8 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);">
-          <p class="text-4xl font-bold text-[#b91c1c]">0</p>
-          <p class="text-sm text-gray-500">Task completed</p>
-        </div>
-        <div class="h-32 text-center bg-white border rounded-lg py-8 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);">
-          <p class="text-4xl font-bold text-yellow-600">3</p>
-          <p class="text-sm text-gray-500">Auto-Approval Eligible</p>
-        </div>
-        <div class="h-32 text-center bg-white border rounded-lg py-8 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);">
-          <p class="text-4xl font-bold text-green-600">0</p>
-          <p class="text-sm text-gray-500">Auto-Approved</p>
+      <div class="flex justify-end pr-12">
+        <div class="grid grid-cols-3 gap-16">
+          <div class="w-[15rem] h-32 text-center bg-white border rounded-lg py-8 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);">
+            <p class="text-4xl font-bold text-[#b91c1c]">0</p>
+            <p class="text-sm text-gray-500">Task completed</p>
+          </div>
+          <div class="w-[15rem] h-32 text-center bg-white border rounded-lg py-8 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);">
+            <p class="text-4xl font-bold text-yellow-600">3</p>
+            <p class="text-sm text-gray-500">Auto-Approval Eligible</p>
+          </div>
+          <div class="w-[15rem] h-32 text-center bg-white border rounded-lg py-8 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);">
+            <p class="text-4xl font-bold text-green-600">0</p>
+            <p class="text-sm text-gray-500">Auto-Approved</p>
+          </div>
         </div>
       </div>
+
 
       <!-- Onboarding Tasks -->
       <section class="mt-10">
         <h2 class="text-lg font-semibold text-gray-800 mb-4">Onboarding Tasks</h2>
-        <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
+        <div class="grid lg:grid-cols-2 md:grid-cols-2 gap-5">
+
           <!-- Upload Valid ID -->
           <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);">
             <div class="flex justify-between items-start mb-2 min-h-[3.5rem]">
