@@ -7,30 +7,19 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#F4F3F0] text-[#1a1a1a]">
+
 <!-- Navbar -->
-<header class="bg-white border-b px-6 py-4 flex items-center justify-between sticky top-0 z-10">
-  <div class="flex items-center space-x-3">
-    <a href="Landing_Page.html" class="relative group w-10 h-10">
-      <!-- SmartStart logo (visible by default) -->
-      <img src="img/smartstart_icon.png"
-           alt="SmartStart Logo"
-           class="w-10 h-10 rounded-[10px] object-cover absolute inset-0 group-hover:opacity-0 transition duration-200" />
-
-      <!-- Back icon (visible on hover) -->
-      <div class="w-10 h-10 flex items-center justify-center rounded-[10px] bg-[#D4B536] text-white opacity-0 group-hover:opacity-100 transition duration-200 absolute inset-0">
-        <!-- Left arrow SVG -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-      </div>
-    </a>
-
+<header class="fixed top-0 left-0 right-0 bg-white border-b px-6 py-4 flex items-center justify-between z-50">
+  <!-- Left: Logo and Title -->
+  <a href="Landing_Page.html" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition">
+    <img src="img/smartstart_icon.png" alt="SmartStart Logo" class="w-10 h-10 rounded-[10px] object-cover" />
     <div class="flex flex-col justify-center leading-tight">
       <h1 class="font-semibold text-lg text-[#b91c1c]">SmartStart</h1>
-      <p class="text-sm text-gray-500">Contextual Assistance</p>
+      <p class="text-sm text-gray-500">Automated Task & Document Processing</p>
     </div>
-  </div>
+  </a>
 </header>
+
 
 <!-- Welcome Message -->
 <section class="text-center max-w-3xl mx-auto px-6 py-12">
@@ -97,18 +86,26 @@
 
 
 <!-- Chat Input -->
-<section class="bg-white border-t py-6 px-6 max-w-5xl mx-auto">
+<section class="sticky bottom-4 z-50 bg-white shadow-lg border-t rounded-md mx-auto max-w-5xl px-6 py-5">
   <div class="flex items-center space-x-4">
-    <input type="text" placeholder="Ask me anything about your onboarding process..." class="flex-1 border border-gray-300 rounded-lg px-4 py-3 text-sm" />
-    <button class="bg-[#b91c1c] text-white px-6 py-3 rounded-lg text-sm font-medium">Send</button>
+    <input
+            type="text"
+            placeholder="Ask me anything about your onboarding process..."
+            class="flex-1 border border-gray-300 rounded-lg px-4 py-3 text-sm"
+    />
+    <button class="bg-[#b91c1c] text-white px-6 py-3 rounded-lg text-sm font-medium flex items-center space-x-2">
+      <img src="img/cont_fol/plane.png" alt="Send Icon" class="w-4 h-4" />
+      <span>Send</span>
+    </button>
   </div>
-  <p class="text-gray-400 text-xs mt-2">SmartStart can help with onboarding tasks, compliance questions, and system access</p>
+  <p class="text-gray-400 text-xs mt-2">
+    SmartStart can help with onboarding tasks, compliance questions, and system access
+  </p>
 </section>
 
-
 <!-- Footer -->
-<footer class="text-center text-gray-400 text-xs py-4">
-  Powered by <span class="text-[#b91c1c] font-semibold">SmartStart</span> &mdash; <span class="text-[#b91c1c]">A BPI Innovation</span>
+<footer class="bg-white text-center text-gray-500 text-sm py-4 border-t mt-10">
+  Powered by <span class="text-[#b91c1c] font-semibold">SmartStart</span> — A BPI Innovation
 </footer>
 </body>
 </html>

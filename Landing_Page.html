@@ -10,36 +10,59 @@
 
 <body class="bg-[#F4F3F0] text-[#1a1a1a]">
 <!-- Navbar -->
-<header class="bg-white border-b px-6 py-4 flex items-center justify-between sticky top-0 z-10">
-  <div class="flex items-center space-x-3">
-    <!-- Icon centered relative to text -->
+<header class="fixed top-0 left-0 right-0 bg-white border-b px-6 py-4 flex items-center justify-between z-50">
+  <!-- Left: Logo and Title (not clickable) -->
+  <div class="flex items-center space-x-3 p-2 rounded-lg">
     <img src="img/smartstart_icon.png" alt="SmartStart Logo" class="w-10 h-10 rounded-[10px] object-cover" />
-
-
-    <!-- Text centered vertically with icon -->
     <div class="flex flex-col justify-center leading-tight">
       <h1 class="font-semibold text-lg text-[#b91c1c]">SmartStart</h1>
-      <p class="text-sm text-gray-500">AI-Powered Banking Onboarding</p>
+      <p class="text-sm text-gray-500">Automated Task & Document Processing</p>
     </div>
+  </div>
+
+  <!-- Right: Header chat input -->
+  <div class="flex items-center space-x-2">
+    <input
+            type="text"
+            placeholder="Quick chat..."
+            class="border border-gray-300 rounded-lg px-3 py-1 text-sm w-60"
+    />
+    <button class="bg-[#b91c1c] text-white px-4 py-1.5 rounded-lg text-sm font-medium">Send</button>
   </div>
 </header>
 
+<!-- Spacer for fixed header -->
+<div class="h-20"></div>
 
-<!-- Intro -->
-<section class="text-center max-w-3xl mx-auto px-4 py-12">
-  <h2 class="text-3xl font-bold mb-4">Streamline Your Onboarding Journey</h2>
-  <p class="text-gray-600">
-    SmartStart combines intelligent automation with personalized guidance to transform your banking onboarding experience.
-    Choose from our AI-powered assistance functions below to take control of your journey.
-  </p>
-</section>
+<!-- Welcome Card -->
+<div class="relative max-w-5xl mx-auto mt-10 px-4">
+  <!-- Red background shadow -->
+  <div class="absolute bottom left-1 w-80 h-full bg-[#AF0E0E] rounded-xl z-0"></div>
+
+  <!-- White card on top -->
+  <div class="relative bg-white p-4 rounded-xl z-10" style="box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);">
+    <h2 class="text-center text-4xl font-bold text-[#b91c1c]">Welcome to SmartStart</h2>
+
+    <section class="text-center max-w-3xl mx-auto px-4 py-3">
+      <p class="text-gray-600 text-sm">
+        SmartStart combines intelligent automation with personalized guidance to transform your banking onboarding experience.
+        Choose from our AI-powered assistance functions below to take control of your journey.
+      </p>
+    </section>
+  </div>
+</div>
+
+<!-- Main Page Grid (optional content continues here) -->
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-6 px-6 py-8">
+  <!-- Add your left/right panel content here -->
+</div>
 
 <!-- Services Section Wrapper -->
-<section class="flex justify-center items-center py-5 px-4 bg-[#F4F3F0]">
+<section class="flex justify-center items-center py-6 px-4 bg-[#F4F3F0]">
   <!-- Services Grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl w-full">
     <!-- 1. Contextual Assistance -->
-    <div class="bg-white rounded-xl shadow-sm p-6 border flex flex-col justify-between items-start h-full transition-transform duration-500 ease hover:-translate-y-2 hover:shadow-lg">
+    <div class="bg-white rounded-xl shadow p-6 border flex flex-col justify-between items-start h-full transition-transform duration-500 ease hover:-translate-y-2 hover:shadow-lg">
       <div class="relative w-12 h-12 mb-4">
         <img src="img/Rectangle_Y.png" alt="Yellow background" class="absolute inset-0 w-full h-full rounded-md" />
         <img src="img/Chatbot.png" alt="Chatbot icon" class="relative z-10 w-6 h-6 mx-auto mt-3" />
@@ -60,7 +83,7 @@
 
 
     <!-- 2. Automated Task & Document Processing -->
-    <div class="bg-white rounded-xl shadow-sm p-6 border flex flex-col justify-between items-start h-full transition-transform duration-500 ease hover:-translate-y-2 hover:shadow-lg">
+    <div class="bg-white rounded-xl shadow p-6 border flex flex-col justify-between items-start h-full transition-transform duration-500 ease hover:-translate-y-2 hover:shadow-lg">
       <div class="relative w-12 h-12 mb-4">
         <img src="img/Rectangle_R.png" alt="Red background" class="absolute inset-0 w-full h-full rounded-md" />
         <img src="img/Settings.png" alt="Settings icon" class="relative z-10 w-6 h-6 mx-auto mt-3" />
@@ -69,7 +92,7 @@
       <p class="text-sm text-gray-600 mb-4">
         Instantly trigger automated actions like approvals or form submissions. Reduces turnaround from days to minutes.
       </p>
-      <a href="contextual-assistance.html" class="relative mt-6 w-full rounded overflow-hidden group h-10">
+      <a href="automated-workflow.html" class="relative mt-6 w-full rounded overflow-hidden group h-10">
         <div class="absolute inset-0 bg-[url('img/bg.png')] bg-cover bg-center transition-all duration-300 group-hover:brightness-55">
         </div>
         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300"></div>
@@ -81,7 +104,7 @@
 
 
     <!-- 3. Personalized Experience -->
-    <div class="bg-white rounded-xl shadow-sm p-6 border flex flex-col justify-between items-start h-full transition-transform duration-500 ease hover:-translate-y-2 hover:shadow-lg">
+    <div class="bg-white rounded-xl shadow p-6 border flex flex-col justify-between items-start h-full transition-transform duration-500 ease hover:-translate-y-2 hover:shadow-lg">
       <div class="relative w-12 h-12 mb-4">
         <img src="img/Rectangle_Y.png" alt="Yellow background" class="absolute inset-0 w-full h-full rounded-md" />
         <img src="img/Sparkles.png" alt="Sparkles icon" class="relative z-10 w-6 h-6 mx-auto mt-3" />
@@ -101,7 +124,7 @@
 
 
     <!-- 4. Seamless Integration -->
-    <div class="bg-white rounded-xl shadow-sm p-6 border flex flex-col justify-between items-start h-full transition-transform duration-500 ease hover:-translate-y-2 hover:shadow-lg">
+    <div class="bg-white rounded-xl shadow p-6 border flex flex-col justify-between items-start h-full transition-transform duration-500 ease hover:-translate-y-2 hover:shadow-lg">
       <div class="relative w-12 h-12 mb-4">
         <img src="img/Rectangle_R.png" alt="Red background" class="absolute inset-0 w-full h-full rounded-md" />
         <img src="img/Link.png" alt="Link icon" class="relative z-10 w-6 h-6 mx-auto mt-3" />
@@ -122,7 +145,7 @@
 
 
     <!-- 5. Smart Escalation -->
-    <div class="bg-white rounded-xl shadow-sm p-6 border flex flex-col justify-between items-start h-full transition-transform duration-500 ease hover:-translate-y-2 hover:shadow-lg">
+    <div class="bg-white rounded-xl shadow p-6 border flex flex-col justify-between items-start h-full transition-transform duration-500 ease hover:-translate-y-2 hover:shadow-lg">
       <div class="relative w-12 h-12 mb-4">
         <img src="img/Rectangle_Y.png" alt="Yellow background" class="absolute inset-0 w-full h-full rounded-md" />
         <img src="img/Move_Up.png" alt="Move Up icon" class="relative z-10 w-6 h-6 mx-auto mt-3" />
@@ -143,7 +166,7 @@
 
 
     <!-- 6. Compliance Intelligence -->
-    <div class="bg-white rounded-xl shadow-sm p-6 border flex flex-col justify-between items-start h-full transition-transform duration-500 ease hover:-translate-y-2 hover:shadow-lg">
+    <div class="bg-white rounded-xl shadow p-6 border flex flex-col justify-between items-start h-full transition-transform duration-500 ease hover:-translate-y-2 hover:shadow-lg">
       <div class="relative w-12 h-12 mb-4">
         <img src="img/Rectangle_R.png" alt="Red background" class="absolute inset-0 w-full h-full rounded-md" />
         <img src="img/Protect.png" alt="Protect icon" class="relative z-10 w-6 h-6 mx-auto mt-3" />

@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ec48cb90-ceb9-4caf-9d95-18c0f1060a8b" name="Changes" comment="innit commit" />
+    <list default="true" id="ec48cb90-ceb9-4caf-9d95-18c0f1060a8b" name="Changes" comment="innit commit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Landing_Page.html" beforeDir="false" afterPath="$PROJECT_DIR$/Landing_Page.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contextual-assistance.html" beforeDir="false" afterPath="$PROJECT_DIR$/contextual-assistance.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,6 +39,9 @@
     &quot;accountId&quot;: &quot;2fedb8a0-d26e-454b-98bc-a0dbb1ada280&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -50,7 +57,7 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/downloads/IntelliJ_Proj/SmartStart",
