@@ -1,0 +1,52 @@
+{
+  "meeting_requests": [
+    {
+      "id": "req_001",
+      "from_user": "emp_001",
+      "to_user": "mgr_001",
+      "from_type": "employee",
+      "to_type": "manager",
+      "title": "SAP Training Discussion",
+      "description": "Need guidance on upcoming SAP Finance module training and preparation steps",
+      "proposed_datetime": "2025-08-26T06:34:23.396885",
+      "priority": "MEDIUM",
+      "meeting_type": "one_on_one",
+      "status": "declined",
+      "created_at": "2025-08-25T06:34:23.396885",
+      "response_datetime": "2025-08-25T18:58:15.110404",
+      "response_reason": ""
+    },
+    {
+      "id": "req_002",
+      "from_user": "mgr_001",
+      "to_user": "emp_001",
+      "from_type": "manager",
+      "to_type": "employee",
+      "title": "Progress Check-in",
+      "description": "Weekly one-on-one to discuss onboarding progress and any support needed",
+      "proposed_datetime": "2025-08-27T06:34:23.396885",
+      "priority": "HIGH",
+      "meeting_type": "one_on_one",
+      "status": "pending",
+      "created_at": "2025-08-25T06:34:23.396885",
+      "response_datetime": null,
+      "response_reason": null
+    },
+    {
+      "id": "req_003",
+      "from_user": "emp_004",
+      "to_user": "mgr_001",
+      "from_type": "employee",
+      "to_type": "manager",
+      "title": "Budget Analysis Clarification",
+      "description": "Questions about Q3 budget variance analysis methodology and reporting format",
+      "proposed_datetime": "2025-08-28T06:34:23.396885",
+      "priority": "MEDIUM",
+      "meeting_type": "one_on_one",
+      "status": "pending",
+      "created_at": "2025-08-25T06:34:23.396885",
+      "response_datetime": null,
+      "response_reason": null
+    }
+  ]
+}

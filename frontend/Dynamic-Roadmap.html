@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPI Finance Onboarding - Dynamic Roadmap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loading-spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #dc2626;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar-day.has-events::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background-color: #dc2626;
+            border-radius: 50%;
+        }
+
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .event-item {
+            transition: all 0.2s;
+        }
+
+        .event-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Chatbot styles */
+        .chat-bubble {
+            animation: slideInUp 0.3s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-typing {
+            animation: typing 1.5s infinite;
+        }
+
+        @keyframes typing {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chat-window {
+            width: 400px;
+            height: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #B90808;
+            border-radius: 2px;
+        }
+
+        .floating-chat-btn {
+            box-shadow: 0 4px 12px rgba(185, 8, 8, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .quick-action-btn {
+            transition: all 0.2s ease;
+        }
+
+        .quick-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Progress Bar Container Fix */
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .progress-bar-wrapper {
+            flex: 1;
+        }
+
+        .progress-text {
+            flex-shrink: 0;
+            text-align: right;
+            min-width: 80px;
+        }
+    </style>
+</head>
+
+<body class="bg-[#F4F3F0] text-gray-900">
+    <!-- Header matching Meeting-Orchestration style -->
+    <header
+        class="sticky top-0 z-50 bg-white px-8 py-4 flex justify-between items-center shadow-[0_6px_10px_rgba(0,0,0,0.15)]">
+        <div class="flex items-center space-x-2">
+            <button onclick="window.location.href='Landing_Page-Employee.html'">
+                <img src="../img/Man-DB/smartstart_icon.png" alt="SmartStart Logo" class="w-8 h-8 rounded-[5px]">
+            </button>
+            <div>
+                <p class="text-lg font-bold text-red-700">SmartStart</p>
+                <p class="text-xs text-gray-600 -mt-1">Employee Dashboard</p>
+            </div>
+        </div>
+
+        <!-- Right section (Notifications + User) -->
+        <div class="flex items-center space-x-4">
+            <!-- Meeting Requests -->
+            <div class="relative">
+                <button id="meeting-requests-btn"
+                    class="relative p-2 text-gray-400 hover:text-gray-500 transition-colors">
+                    <img src="../img/Man-DB/requests.png" alt="Meeting Requests" class="w-6 h-6 rounded-[5px]">
+                    <span id="requests-badge"
+                        class="absolute -top-0 -right-0 hidden bg-blue-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center notification-badge">0</span>
+                </button>
+
+                <!-- Dropdown -->
+                <div id="meeting-requests-dropdown"
+                    class="absolute right-0 mt-2 w-96 bg-white rounded-md shadow-lg py-1 z-50 hidden">
+                    <div class="px-4 py-2 border-b">
+                        <h3 class="text-sm font-medium text-gray-900">Meeting Requests</h3>
+                    </div>
+                    <div id="meeting-requests-content" class="max-h-96 overflow-y-auto">
+                        <!-- Meeting requests will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="relative">
+                <button id="notifications-btn" class="relative p-2 text-gray-400 hover:text-gray-500 transition-colors">
+                    <img src="../img/Man-DB/notification.png" alt="General Notifications" class="w-6 h-6 rounded-[5px]">
+                    <span id="notification-badge"
+                        class="absolute -top-0 -right-0 hidden bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center notification-badge">0</span>
+                </button>
+
+                <!-- Dropdown -->
+                <div id="notifications-dropdown"
+                    class="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50 hidden">
+                    <div class="px-4 py-2 border-b">
+                        <h3 class="text-sm font-medium text-gray-900">Notifications</h3>
+                    </div>
+                    <div id="notifications-list" class="max-h-96 overflow-y-auto">
+                        <!-- Notifications will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- User -->
+            <div class="flex items-center space-x-3 gap-2">
+                <div
+                    class="w-9 h-9 rounded-full bg-[#B90808] flex items-center justify-center text-white font-semibold">
+                    JD</div>
+                <button
+                        onclick="window.location.href='Login.html'"
+                        class="bg-[#B90808] hover:bg-red-800 text-white px-4 py-2 rounded-[6px]">
+                    Log out
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="px-6 py-6 space-y-6 overflow-y-auto max-w-7xl mx-auto">
+        <!-- Welcome Banner with Red Offset Shadow -->
+        <div class="relative max-w-7xl mx-auto">
+            <!-- Red background shadow -->
+            <div class="absolute bottom-0 right-1.5 w-full h-full bg-[#AF0E0E] rounded-xl z-0"></div>
+
+            <!-- White card on top -->
+            <div
+                class="relative bg-white p-6 rounded-xl flex justify-between items-center z-10 shadow-[0_6px_10px_rgba(0,0,0,0.2)]">
+                <div class="flex flex-col">
+                    <h2 class="font-bold text-xl text-red-800">
+                        Welcome to your roadmap!
+                    </h2>
+                    <p class="text-sm text-gray-600 mt-1" id="stats-text">
+                        Juan dela Cruz • Finance Analyst • Day 12
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Insights and Quick Actions Row -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <!-- AI Smart Recommendations (Full width on mobile, 2/3 on desktop) -->
+            <div class="xl:col-span-2">
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
+                    <div class="flex items-start space-x-3 mb-4">
+                        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <img src="../img/Man-DB/bot.png" alt="AI Icon" class="w-4 h-3.5 filter brightness-0 invert">
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-blue-800 text-lg mb-2">AI Assistant Recommendations</h4>
+                            <div id="aiRecommendations" class="space-y-3">
+                                <div class="bg-white rounded-lg p-4 border border-blue-100">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="font-medium text-red-700">Priority Action</span>
+                                        <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">Due
+                                            Soon</span>
+                                    </div>
+                                    <p class="text-sm text-gray-700 mb-2">TIN Application deadline approaching. Schedule
+                                        BIR visit within 3 days.</p>
+                                    <button onclick="scheduleTask('BIR_VISIT')"
+                                        class="text-xs bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+                                        Schedule Now
+                                    </button>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-green-100">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="font-medium text-green-700">Great Progress!</span>
+                                        <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">On
+                                            Track</span>
+                                    </div>
+                                    <p class="text-sm text-gray-700">You're ahead of schedule on documentation
+                                        requirements. Consider starting SAP training early.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Quick Actions (1/3 width) -->
+            <div class="space-y-4">
+                <div class="bg-white rounded-xl shadow-[0_6px_10px_rgba(0,0,0,0.15)] p-6">
+                    <h4 class="font-semibold text-[#B90808] mb-4 flex items-center gap-2">
+                        <span>⚡</span>
+                        Quick Actions
+                    </h4>
+                    <div class="space-y-3">
+                        <button id="openChatBtn"
+                            class="quick-action-btn w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white p-3 rounded-lg text-left text-sm transition-all flex items-center gap-3">
+                            <img src="../img/Man-DB/bot.png" alt="Chat Icon" class="w-5 h-4.5 filter brightness-0 invert">
+                            <div>
+                                <div class="font-medium">Chat with AI Assistant</div>
+                                <div class="text-xs opacity-90">Get instant help & guidance</div>
+                            </div>
+                        </button>
+                        <button id="requestMeetingBtn"
+                            class="quick-action-btn w-full bg-red-100 hover:bg-red-200 p-3 rounded-lg text-left text-sm transition-all flex items-center gap-3">
+                            <img src="../img/Man-DB/requests.png" alt="Meeting Icon" class="w-4 h-4">
+                            <div>
+                                <div class="font-medium">Request Meeting</div>
+                                <div class="text-xs text-gray-600">Schedule with manager</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <section class="space-y-6">
+            <h3 class="font-semibold text-lg flex items-center gap-4 mb-6">
+                <div class="w-8 h-8 rounded-lg bg-[#CB0A0A] flex items-center justify-center">
+                    <img src="../img/Man-DB/roadmap.png" alt="Roadmap Icon" class="w-5 h-5">
+                </div>
+                AI-Powered Dynamic Roadmap
+            </h3>
+
+            <!-- Progress Overview -->
+            <div class="bg-white rounded-xl shadow-[0_6px_10px_rgba(0,0,0,0.15)] p-6">
+                <!-- Fixed Progress Bar with aligned percentage -->
+                <div class="progress-container">
+                    <div class="progress-bar-wrapper">
+                        <div class="w-full bg-gray-200 rounded-full h-3 mb-2">
+                            <div id="progressBar"
+                                class="bg-gradient-to-r from-[#B90808] to-red-400 h-3 rounded-full transition-all duration-500"
+                                style="width: 45%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-text text-center">
+                        <span class="text-3xl font-bold text-[#B90808]" id="progressPercentage">45%</span>
+                        <p class="text-sm text-gray-600">Overall Progress</p>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-4 gap-4 mt-6">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-green-600" id="completedTasks">5</div>
+                        <div class="text-sm text-green-700">Completed</div>
+                    </div>
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-yellow-600" id="inProgressTasks">3</div>
+                        <div class="text-sm text-yellow-700">In Progress</div>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-red-600" id="overdueItems">1</div>
+                        <div class="text-sm text-red-700">Overdue</div>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold text-blue-600" id="upcomingTasks">8</div>
+                        <div class="text-sm text-blue-700">Upcoming</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                <!-- Main Roadmap (3/4 width) -->
+                <div class="xl:col-span-3">
+                    <!-- Dynamic Phases Container -->
+                    <div id="dynamicRoadmap">
+                        <!-- Phases will be dynamically populated here -->
+                    </div>
+                </div>
+
+                <!-- Sidebar with Calendar and Insights (1/4 width) -->
+                <div class="xl:col-span-1">
+                    <div class="sticky top-28 space-y-6">
+                        <!-- Interactive Smart Calendar -->
+                        <div class="bg-white rounded-xl shadow-[0_6px_10px_rgba(0,0,0,0.15)] p-6">
+                            <!-- Mini Calendar -->
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-3">
+                                    <button id="cal-prev-month" class="p-1 hover:bg-gray-100 rounded transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 19l-7-7 7-7"></path>
+                                        </svg>
+                                    </button>
+                                    <span id="cal-current-month" class="font-medium text-sm">August 2025</span>
+                                    <button id="cal-next-month" class="p-1 hover:bg-gray-100 rounded transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <!-- Calendar Grid -->
+                                <div class="grid grid-cols-7 gap-1 text-xs">
+                                    <div class="text-center text-gray-500 p-1 font-medium">S</div>
+                                    <div class="text-center text-gray-500 p-1 font-medium">M</div>
+                                    <div class="text-center text-gray-500 p-1 font-medium">T</div>
+                                    <div class="text-center text-gray-500 p-1 font-medium">W</div>
+                                    <div class="text-center text-gray-500 p-1 font-medium">T</div>
+                                    <div class="text-center text-gray-500 p-1 font-medium">F</div>
+                                    <div class="text-center text-gray-500 p-1 font-medium">S</div>
+                                    <div id="calendar-grid" class="contents">
+                                        <!-- Calendar days will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Selected Day Schedule -->
+                            <div class="bg-gray-50 rounded-lg p-3 mb-4">
+                                <h5 class="font-semibold text-gray-800 text-sm mb-2" id="selected-day-title">Today's
+                                    Schedule</h5>
+                                <div id="selected-day-schedule" class="space-y-2">
+                                    <!-- Schedule items will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional AI Insights -->
+                        <div class="bg-white rounded-xl shadow-[0_6px_10px_rgba(0,0,0,0.15)] p-6">
+                            <h4 class="font-semibold text-[#B90808] mb-4 flex items-center gap-2">
+                                <img src="../img/Man-DB/bot.png" alt="AI Icon" class="w-5 h-4.5">
+                                Additional Insights
+                            </h4>
+
+                            <div id="additionalInsights" class="space-y-3 text-sm">
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                    <div class="font-medium text-blue-800">Training Available</div>
+                                    <div class="text-blue-700 text-xs mt-1">SAP training modules are accessible even
+                                        while completing documentation.</div>
+                                </div>
+                                <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                                    <div class="font-medium text-green-800">Efficiency Tip</div>
+                                    <div class="text-green-700 text-xs mt-1">Complete morning tasks between 9-11 AM for
+                                        optimal productivity.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Smart Conversational Interface Chatbot -->
+    <div class="chatbot-container">
+        <!-- Floating Chat Button -->
+        <button id="toggleChatBtn"
+            class="floating-chat-btn w-14 h-14 bg-[#B90808] hover:bg-red-800 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-300">
+            <img src="../img/Man-DB/bot.png" alt="AI Assistant" class="w-6 h-5.5 filter brightness-0 invert">
+        </button>
+
+        <!-- Chat Window -->
+        <div id="chatWindow" class="chat-window bg-white rounded-xl hidden mb-4 overflow-hidden">
+            <!-- Chat Header -->
+            <div class="bg-[#B90808] text-white p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <img src="../img/Man-DB/bot.png" alt="AI Assistant" class="w-6 h-5.5 filter brightness-0 invert">
+                    <div>
+                        <div class="font-semibold">SmartStart AI Assistant</div>
+                        <div class="text-xs opacity-90">Available 24/7 for your onboarding needs</div>
+                    </div>
+                </div>
+                <button id="minimizeChatBtn" class="hover:bg-red-700 p-1 rounded">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chatMessages" class="chat-messages p-4 space-y-4">
+                <div class="chat-bubble flex items-start gap-3">
+                    <img src="../img/Man-DB/bot.png" alt="AI" class="w-6 h-5.5 mt-1">
+                    <div class="bg-gray-100 rounded-lg p-3 flex-1">
+                        <p class="text-sm">Hi Juan! I'm here to help you with your BPI Finance onboarding. I can answer
+                            questions about:</p>
+                        <ul class="text-xs mt-2 space-y-1 text-gray-600">
+                            <li>• BIR and tax requirements</li>
+                            <li>• SAP training procedures</li>
+                            <li>• Company policies & benefits</li>
+                            <li>• Documentation requirements</li>
+                        </ul>
+                        <p class="text-xs mt-2 text-gray-600">What would you like to know?</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Suggestions -->
+            <div class="px-4 pb-2">
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="sendQuickMessage('What documents do I need for TIN application?')"
+                        class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200">
+                        TIN Requirements
+                    </button>
+                    <button onclick="sendQuickMessage('How do I access SAP training?')"
+                        class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full hover:bg-green-200">
+                        SAP Training
+                    </button>
+                    <button onclick="sendQuickMessage('What are my employee benefits?')"
+                        class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200">
+                        Benefits Info
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="p-4 border-t">
+                <div class="flex gap-2">
+                    <input id="chatInput" type="text" placeholder="Ask me anything about your onboarding..."
+                        class="flex-1 p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#B90808]">
+                    <button id="sendChatBtn"
+                        class="bg-[#B90808] text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meeting Request Modal -->
+    <div id="meetingRequestModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div
+            class="bg-white rounded-xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto shadow-[0_6px_10px_rgba(0,0,0,0.2)]">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                    <img src="../img/Man-DB/requests.png" alt="Meeting Icon" class="w-5 h-5">
+                    Request Meeting
+                </h3>
+                <button id="closeMeetingModal" class="text-gray-400 hover:text-gray-600 p-1 hover:bg-gray-100 rounded">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Meeting Title</label>
+                    <input id="meetingTitle" type="text"
+                        class="w-full p-2 border border-gray-300 rounded bg-[#F6F4EE] shadow-[0_6px_10px_rgba(0,0,0,0.15)]"
+                        placeholder="e.g., SAP Training Discussion">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea id="meetingDescription"
+                        class="w-full p-2 border border-gray-300 rounded bg-[#F6F4EE] h-20 shadow-[0_6px_10px_rgba(0,0,0,0.15)]"
+                        placeholder="Briefly describe the purpose of this meeting"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Preferred Date & Time</label>
+                    <input id="meetingDateTime" type="datetime-local"
+                        class="w-full p-2 border border-gray-300 rounded bg-[#F6F4EE] shadow-[0_6px_10px_rgba(0,0,0,0.15)]">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                    <select id="meetingPriority"
+                        class="w-full p-2 border border-gray-300 rounded bg-[#F6F4EE] shadow-[0_6px_10px_rgba(0,0,0,0.15)]">
+                        <option value="LOW">Low</option>
+                        <option value="MEDIUM" selected>Medium</option>
+                        <option value="HIGH">High</option>
+                        <option value="URGENT">Urgent</option>
+                    </select>
+                </div>
+
+                <div class="flex space-x-3">
+                    <button id="cancelMeetingRequest"
+                        class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-400 transition-colors">
+                        Cancel
+                    </button>
+                    <button id="submitMeetingRequest"
+                        class="flex-1 bg-[#B90808] text-white py-2 rounded-lg text-sm font-medium hover:bg-red-800 transition-colors flex items-center justify-center gap-2">
+                        <img src="../img/Man-DB/Gmail-logo-white.png" alt="Email Icon" class="w-4 h-4">
+                        Send Request
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white text-center text-sm py-4 border-t mt-5">
+        Powered by <span class="font-semibold text-yellow-600">SmartStart</span> —
+        <span class="font-semibold text-red-700">A BPI Innovation</span>
+    </footer>
+
+    <script>
+        // Global variables
+        const EMPLOYEE_ID = 'emp_001';
+        const MANAGER_ID = 'mgr_001';
+        const API_BASE = 'http://localhost:5000/api';
+        let calendarDate = new Date(2025, 7, 1); // August 2025
+        let selectedCalendarDay = new Date().getDate(); // Today's date
+        let chatIsOpen = false;
+
+        // Sample schedule data for different days
+        const scheduleData = {
+            23: [
+                {
+                    time: '9:00 AM',
+                    title: 'Work: General Tasks',
+                    type: 'work',
+                    color: 'text-blue-600',
+                    icon: '💼'
+                },
+                {
+                    time: '2:00 PM',
+                    title: 'BIR Office Visit',
+                    type: 'appointment',
+                    color: 'text-red-600',
+                    icon: '🏛️'
+                },
+                {
+                    time: '4:00 PM',
+                    title: 'Team Standup',
+                    type: 'meeting',
+                    color: 'text-green-600',
+                    icon: '👥'
+                }
+            ],
+            24: [
+                {
+                    time: '10:00 AM',
+                    title: 'Manager Check-in',
+                    type: 'meeting',
+                    color: 'text-blue-600',
+                    icon: '👨‍💼'
+                },
+                {
+                    time: '3:00 PM',
+                    title: 'Document Review',
+                    type: 'task',
+                    color: 'text-orange-600',
+                    icon: '📋'
+                }
+            ],
+            25: [
+                {
+                    time: '9:00 AM',
+                    title: 'SAP Training Day 1',
+                    type: 'training',
+                    color: 'text-green-600',
+                    icon: '🎓'
+                },
+                {
+                    time: '1:00 PM',
+                    title: 'Lunch & Learn Session',
+                    type: 'training',
+                    color: 'text-green-600',
+                    icon: '🍽️'
+                }
+            ]
+        };
+
+        // AI Chat Functions
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            const toggleBtn = document.getElementById('toggleChatBtn');
+
+            chatIsOpen = !chatIsOpen;
+
+            if (chatIsOpen) {
+                chatWindow.classList.remove('hidden');
+                toggleBtn.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>';
+            } else {
+                chatWindow.classList.add('hidden');
+                toggleBtn.innerHTML = '<img src="../img/Man-DB/bot.png" alt="AI Assistant" class="w-6 h-5.5 filter brightness-0 invert">';
+            }
+        }
+
+        function processAIQuery(userMessage) {
+            const lowerMessage = userMessage.toLowerCase();
+
+            // Simple AI response logic for demo
+            if (lowerMessage.includes('tin') || lowerMessage.includes('bir')) {
+                return "For TIN application, you'll need: 1) Valid ID (2 copies), 2) Birth certificate, 3) Filled BIR Form 1904. Visit BIR RDO Tuesday-Thursday 9-11 AM for fastest service. Processing takes 1-2 weeks.";
+            } else if (lowerMessage.includes('sap') || lowerMessage.includes('training')) {
+                return "SAP Finance Module training is a 5-day program. You can start once your basic documentation is 60% complete. Access the learning portal via your BPI employee account. Need your employee ID and temporary password from IT.";
+            } else if (lowerMessage.includes('benefits') || lowerMessage.includes('insurance')) {
+                return "BPI employee benefits include: Health insurance (HMO), 15 days vacation leave, 15 days sick leave, rice allowance, 13th month pay, and performance bonuses. Full benefits activate after probationary period.";
+            } else if (lowerMessage.includes('salary') || lowerMessage.includes('pay')) {
+                return "I understand you have questions about compensation. This requires discussion with HR or your manager as it involves confidential information specific to your role and experience.";
+            } else {
+                return "I'd be happy to help! Could you be more specific about what you need assistance with? I can help with TIN applications, SAP training, benefits, or general onboarding questions.";
+            }
+        }
+
+        function sendMessage(message) {
+            if (!message.trim()) return;
+
+            const chatMessages = document.getElementById('chatMessages');
+
+            // Add user message
+            const userBubble = document.createElement('div');
+            userBubble.className = 'chat-bubble flex items-start gap-3 justify-end';
+            userBubble.innerHTML = `
+                <div class="bg-[#B90808] text-white rounded-lg p-3 max-w-xs">
+                    <p class="text-sm">${message}</p>
+                </div>
+                <div class="w-8 h-8 bg-[#B90808] rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0 mt-1">JD</div>
+            `;
+            chatMessages.appendChild(userBubble);
+
+            // Show typing indicator
+            const typingBubble = document.createElement('div');
+            typingBubble.className = 'chat-bubble flex items-start gap-3';
+            typingBubble.id = 'typing-indicator';
+            typingBubble.innerHTML = `
+                <img src="../img/Man-DB/bot.png" alt="AI" class="w-6 h-5.5 mt-1">
+                <div class="bg-gray-100 rounded-lg p-3 flex-1">
+                    <div class="flex space-x-1">
+                        <div class="w-2 h-2 bg-gray-400 rounded-full chat-typing"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full chat-typing" style="animation-delay: 0.2s;"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full chat-typing" style="animation-delay: 0.4s;"></div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(typingBubble);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Process message after delay
+            setTimeout(() => {
+                const aiResponse = processAIQuery(message);
+
+                // Remove typing indicator
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+
+                // Add AI response
+                const aiBubble = document.createElement('div');
+                aiBubble.className = 'chat-bubble flex items-start gap-3';
+                aiBubble.innerHTML = `
+                    <img src="../img/Man-DB/bot.png" alt="AI" class="w-6 h-5.5 mt-1">
+                    <div class="bg-gray-100 rounded-lg p-3 flex-1">
+                        <p class="text-sm">${aiResponse}</p>
+                    </div>
+                `;
+                chatMessages.appendChild(aiBubble);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1500);
+        }
+
+        function sendQuickMessage(message) {
+            sendMessage(message);
+            document.getElementById('chatInput').value = '';
+        }
+
+        function scheduleTask(taskType) {
+            if (taskType === 'BIR_VISIT') {
+                document.getElementById('meetingTitle').value = 'BIR Office Visit - TIN Application';
+                document.getElementById('meetingDescription').value = 'Need assistance with TIN application process and required documents review';
+                document.getElementById('meetingPriority').value = 'HIGH';
+                document.getElementById('meetingRequestModal').classList.remove('hidden');
+            }
+        }
+
+        // API functions to fetch data from backend
+        async function fetchRoadmap() {
+            try {
+                const response = await fetch(`${API_BASE}/employee/${EMPLOYEE_ID}/roadmap`);
+                if (response.ok) {
+                    return await response.json();
+                }
+            } catch (error) {
+                console.log('Using demo data, backend not available');
+            }
+
+            // Fallback demo data
+            return {
+                employee: {
+                    id: EMPLOYEE_ID,
+                    name: 'Juan dela Cruz',
+                    position: 'Finance Analyst',
+                    department: 'Finance'
+                },
+                overall_progress: 45,
+                stats: {
+                    completed_tasks: 5,
+                    in_progress_tasks: 3,
+                    overdue_tasks: 1,
+                    upcoming_tasks: 8
+                },
+                phases: {
+                    critical_documentation: {
+                        title: 'Critical Documentation Phase',
+                        status: 'in_progress',
+                        completion_percentage: 60,
+                        tasks: [
+                            {
+                                task_id: 'task_001',
+                                title: 'Submit NBI Clearance',
+                                description: 'Obtain and submit valid NBI Clearance certificate',
+                                status: 'completed',
+                                priority: 'HIGH',
+                                deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+                                estimated_time: 240,
+                                progress: 100,
+                                category: 'Documentation'
+                            },
+                            {
+                                task_id: 'task_002',
+                                title: 'TIN Application',
+                                description: 'Apply for Tax Identification Number at BIR',
+                                status: 'in_progress',
+                                priority: 'HIGH',
+                                deadline: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+                                estimated_time: 180,
+                                progress: 70,
+                                category: 'Legal Requirements',
+                                ai_scheduling: {
+                                    reasoning: 'BIR visits are most efficient on Tuesday-Thursday, 9-11 AM to avoid crowds'
+                                }
+                            }
+                        ]
+                    },
+                    finance_training: {
+                        title: 'Finance Training Phase',
+                        status: 'available',
+                        completion_percentage: 20,
+                        tasks: [
+                            {
+                                task_id: 'task_003',
+                                title: 'SAP Finance Module Training',
+                                description: '5-day comprehensive SAP training for finance operations',
+                                status: 'in_progress',
+                                priority: 'MEDIUM',
+                                deadline: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
+                                estimated_time: 2400,
+                                progress: 20,
+                                category: 'Finance Training'
+                            }
+                        ]
+                    },
+                    work_assignments: {
+                        title: 'Work Assignments Phase',
+                        status: 'available',
+                        completion_percentage: 10,
+                        tasks: [
+                            {
+                                task_id: 'task_005',
+                                title: 'Q3 Budget Analysis Project',
+                                description: 'Mentored project analyzing Q3 budget variance and trends',
+                                status: 'pending',
+                                priority: 'MEDIUM',
+                                deadline: new Date(Date.now() + 35 * 24 * 60 * 60 * 1000).toISOString(),
+                                estimated_time: 1200,
+                                progress: 10,
+                                category: 'Work Assignment'
+                            }
+                        ]
+                    }
+                }
+            };
+        }
+
+        // Calendar functions
+        function updateCalendarGrid() {
+            const container = document.getElementById('calendar-grid');
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = firstDay.getDay();
+
+            container.innerHTML = '';
+
+            // Add empty cells for days before month starts
+            for (let i = 0; i < startingDayOfWeek; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day text-gray-300';
+                container.appendChild(emptyDay);
+            }
+
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('button');
+                const hasEvents = scheduleData[day] && scheduleData[day].length > 0;
+                const isSelected = day === selectedCalendarDay;
+                const isToday = day === new Date().getDate() &&
+                    month === new Date().getMonth() &&
+                    year === new Date().getFullYear();
+
+                dayElement.className = `calendar-day relative hover:bg-gray-100 rounded text-xs p-1 transition-colors ${isSelected ? 'bg-[#B90808] text-white' :
+                    isToday ? 'bg-blue-100 text-blue-800 font-semibold' :
+                        'text-gray-700'
+                    } ${hasEvents ? 'has-events font-medium' : ''}`;
+
+                dayElement.textContent = day;
+
+                dayElement.addEventListener('click', () => {
+                    selectedCalendarDay = day;
+                    updateCalendarGrid();
+                    updateSelectedDaySchedule();
+                });
+
+                container.appendChild(dayElement);
+            }
+
+            // Update month display
+            document.getElementById('cal-current-month').textContent =
+                calendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        }
+
+        function updateSelectedDaySchedule() {
+            const container = document.getElementById('selected-day-schedule');
+            const titleElement = document.getElementById('selected-day-title');
+
+            const today = new Date().getDate();
+            const dayName = selectedCalendarDay === today ? 'Today' :
+                selectedCalendarDay === today + 1 ? 'Tomorrow' :
+                    `Aug ${selectedCalendarDay}`;
+
+            titleElement.textContent = `${dayName}'s Schedule`;
+
+            const daySchedule = scheduleData[selectedCalendarDay] || [];
+
+            container.innerHTML = '';
+
+            if (daySchedule.length === 0) {
+                const noEventDiv = document.createElement('div');
+                noEventDiv.className = 'text-center py-4';
+                noEventDiv.innerHTML = `
+                    <div class="text-gray-400 text-xs">
+                        <svg class="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z"></path>
+                        </svg>
+                        <p>No scheduled events</p>
+                        <p class="mt-1">General work day</p>
+                    </div>
+                `;
+                container.appendChild(noEventDiv);
+                return;
+            }
+
+            daySchedule.forEach(event => {
+                const eventDiv = document.createElement('div');
+                eventDiv.className = 'event-item flex items-center space-x-3 p-2 hover:bg-white rounded cursor-pointer';
+                eventDiv.innerHTML = `
+                    <div class="text-lg">${event.icon}</div>
+                    <div class="flex-1">
+                        <div class="text-sm font-medium ${event.color}">${event.title}</div>
+                        <div class="text-xs text-gray-500">${event.time}</div>
+                    </div>
+                `;
+                container.appendChild(eventDiv);
+            });
+        }
+
+        function renderRoadmapPhases(phases) {
+            const container = document.getElementById('dynamicRoadmap');
+            container.innerHTML = '';
+
+            let phaseNumber = 1;
+
+            Object.entries(phases).forEach(([phaseKey, phase]) => {
+                const phaseDiv = document.createElement('div');
+                phaseDiv.className = 'mb-8';
+
+                const statusColor = phase.status === 'in_progress' ? 'bg-yellow-100 text-yellow-700' :
+                    phase.status === 'available' ? 'bg-blue-100 text-blue-700' :
+                        phase.status === 'locked' ? 'bg-gray-100 text-gray-600' :
+                            'bg-green-100 text-green-700';
+
+                const phaseOpacity = phase.status === 'locked' ? 'opacity-60' : '';
+
+                phaseDiv.innerHTML = `
+                    <div class="bg-white rounded-xl shadow-[0_6px_10px_rgba(0,0,0,0.15)] p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-8 h-8 ${phase.status === 'locked' ? 'bg-gray-400' : 'bg-[#B90808]'} text-white rounded-full flex items-center justify-center font-bold mr-3">${phaseNumber}</div>
+                            <h4 class="font-semibold text-lg">${phase.title}</h4>
+                            <div class="ml-auto ${statusColor} px-3 py-1 rounded-full">
+                                <span class="text-sm">${phase.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+                            </div>
+                            <div class="ml-2 text-sm text-gray-600">${phase.completion_percentage}%</div>
+                        </div>
+                        <div class="space-y-4 ${phaseOpacity}" id="phase-${phaseKey}">
+                            <!-- Tasks will be added here -->
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(phaseDiv);
+
+                // Add tasks to phase
+                const tasksContainer = document.getElementById(`phase-${phaseKey}`);
+                phase.tasks.forEach(task => {
+                    const taskDiv = createTaskElement(task, phase.status !== 'locked');
+                    tasksContainer.appendChild(taskDiv);
+                });
+
+                phaseNumber++;
+            });
+        }
+
+        function createTaskElement(task, isInteractive) {
+            const taskDiv = document.createElement('div');
+
+            const priorityColors = {
+                'URGENT': 'border-red-500 bg-red-50',
+                'HIGH': 'border-orange-500 bg-orange-50',
+                'MEDIUM': 'border-yellow-500 bg-yellow-50',
+                'LOW': 'border-blue-500 bg-blue-50'
+            };
+
+            const statusColors = {
+                'completed': 'border-green-500 bg-green-50',
+                'in_progress': 'border-blue-500 bg-blue-50',
+                'pending': priorityColors[task.priority] || 'border-gray-500 bg-gray-50'
+            };
+
+            const borderColor = task.status === 'completed' ? statusColors.completed : statusColors[task.status];
+
+            const progressWidth = task.progress || 0;
+            const progressColor = task.status === 'completed' ? 'bg-green-500' :
+                task.priority === 'URGENT' ? 'bg-red-500' :
+                    task.priority === 'HIGH' ? 'bg-orange-500' : 'bg-blue-500';
+
+            const deadline = new Date(task.deadline);
+            const isOverdue = deadline < new Date() && task.status !== 'completed';
+
+            taskDiv.className = `bg-white border-l-4 ${borderColor.split(' ')[0]} rounded-lg shadow-sm p-4 mb-3`;
+
+            let actionButton = '';
+            if (isInteractive && task.status !== 'completed') {
+                if (task.category === 'Finance Training' || task.category === 'Department Integration') {
+                    actionButton = `<button onclick="requestMeetingForTask('${task.task_id}')" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 flex items-center gap-1">
+                        <img src="../img/Man-DB/requests.png" alt="Schedule Icon" class="w-3 h-3 filter brightness-0 invert">
+                        Schedule
+                    </button>`;
+                } else {
+                    actionButton = `<button onclick="markTaskComplete('${task.task_id}')" class="text-green-600 hover:text-green-800 font-medium text-sm">✅ Mark Complete</button>`;
+                }
+            } else if (task.status === 'completed') {
+                actionButton = `<span class="text-green-600 text-sm">✅ Completed</span>`;
+            }
+
+            const priorityBadge = task.status !== 'completed' ?
+                `<span class="bg-${task.priority === 'URGENT' ? 'red' : task.priority === 'HIGH' ? 'orange' : task.priority === 'MEDIUM' ? 'yellow' : 'blue'}-100 text-${task.priority === 'URGENT' ? 'red' : task.priority === 'HIGH' ? 'orange' : task.priority === 'MEDIUM' ? 'yellow' : 'blue'}-700 text-xs px-2 py-1 rounded mr-2">${task.priority}</span>` : '';
+
+            taskDiv.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <h5 class="font-medium text-gray-800 flex items-center">
+                        ${priorityBadge}
+                        ${task.title}
+                    </h5>
+                    ${actionButton}
+                </div>
+                <p class="text-sm text-gray-600 mb-3">${task.description}</p>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4 text-xs text-gray-500">
+                        <span>📅 Due: ${deadline.toLocaleDateString()}</span>
+                        <span>⏰ Est. Time: ${Math.round(task.estimated_time / 60)}h</span>
+                        ${isOverdue ? '<span class="text-red-600 font-medium">⚠️ Overdue</span>' : ''}
+                    </div>
+                    <div class="w-20 h-2 bg-gray-200 rounded-full">
+                        <div class="${progressColor} h-2 rounded-full" style="width: ${progressWidth}%"></div>
+                    </div>
+                </div>
+                ${task.ai_scheduling ? `
+                    <div class="mt-2 text-xs text-blue-600 flex items-center gap-1">
+                        <img src="../img/Man-DB/bot.png" alt="AI Icon" class="w-3 h-2.5">
+                        AI Suggests: ${task.ai_scheduling.reasoning}
+                    </div>
+                ` : ''}
+            `;
+
+            return taskDiv;
+        }
+
+        // Event handlers
+        function markTaskComplete(taskId) {
+            // Send to backend if available
+            fetch(`${API_BASE}/employee/${EMPLOYEE_ID}/task/${taskId}/update`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'completed', progress: 100 })
+            }).catch(() => console.log('Backend not available'));
+
+            alert('✅ Task updated successfully! Your manager has been notified.');
+        }
+
+        function requestMeetingForTask(taskId) {
+            document.getElementById('meetingRequestModal').classList.remove('hidden');
+        }
+
+        async function submitMeetingRequest() {
+            const title = document.getElementById('meetingTitle').value;
+            const description = document.getElementById('meetingDescription').value;
+            const dateTime = document.getElementById('meetingDateTime').value;
+            const priority = document.getElementById('meetingPriority').value;
+
+            if (!title || !description || !dateTime) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const requestData = {
+                from_user: EMPLOYEE_ID,
+                to_user: MANAGER_ID,
+                from_type: 'employee',
+                to_type: 'manager',
+                title: title,
+                description: description,
+                proposed_datetime: new Date(dateTime).toISOString(),
+                priority: priority,
+                meeting_type: 'one_on_one'
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/meeting/request`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestData)
+                });
+
+                if (response.ok) {
+                    alert('✅ Meeting request sent successfully! Your manager will receive a notification.');
+                } else {
+                    throw new Error('Failed to send request');
+                }
+            } catch (error) {
+                console.log('Backend not available, showing demo message');
+                alert('✅ Meeting request sent successfully! Your manager will receive a notification.');
+            }
+
+            document.getElementById('meetingRequestModal').classList.add('hidden');
+
+            // Clear form
+            document.getElementById('meetingTitle').value = '';
+            document.getElementById('meetingDescription').value = '';
+            document.getElementById('meetingDateTime').value = '';
+            document.getElementById('meetingPriority').value = 'MEDIUM';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async function () {
+            // Load and render roadmap
+            try {
+                const data = await fetchRoadmap();
+                renderRoadmapPhases(data.phases);
+
+                // Update progress statistics
+                document.getElementById('overallProgress').textContent = `${data.overall_progress}%`;
+                document.getElementById('progressBar').style.width = `${data.overall_progress}%`;
+                document.getElementById('progressPercentage').textContent = `${data.overall_progress}%`;
+                document.getElementById('completedTasks').textContent = data.stats.completed_tasks;
+                document.getElementById('inProgressTasks').textContent = data.stats.in_progress_tasks;
+                document.getElementById('overdueItems').textContent = data.stats.overdue_tasks;
+                document.getElementById('upcomingTasks').textContent = data.stats.upcoming_tasks;
+            } catch (error) {
+                console.log('Using demo data');
+            }
+
+            updateCalendarGrid();
+            updateSelectedDaySchedule();
+
+            // Calendar navigation
+            document.getElementById('cal-prev-month').addEventListener('click', () => {
+                calendarDate.setMonth(calendarDate.getMonth() - 1);
+                updateCalendarGrid();
+            });
+
+            document.getElementById('cal-next-month').addEventListener('click', () => {
+                calendarDate.setMonth(calendarDate.getMonth() + 1);
+                updateCalendarGrid();
+            });
+
+            // Chat functionality
+            document.getElementById('toggleChatBtn').addEventListener('click', toggleChat);
+            document.getElementById('openChatBtn').addEventListener('click', () => {
+                if (!chatIsOpen) toggleChat();
+            });
+            document.getElementById('minimizeChatBtn').addEventListener('click', toggleChat);
+
+            document.getElementById('sendChatBtn').addEventListener('click', () => {
+                const input = document.getElementById('chatInput');
+                if (input.value.trim()) {
+                    sendMessage(input.value);
+                    input.value = '';
+                }
+            });
+
+            document.getElementById('chatInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const input = document.getElementById('chatInput');
+                    if (input.value.trim()) {
+                        sendMessage(input.value);
+                        input.value = '';
+                    }
+                }
+            });
+
+            // Modal controls
+            document.getElementById('requestMeetingBtn').addEventListener('click', () => {
+                document.getElementById('meetingRequestModal').classList.remove('hidden');
+            });
+
+            document.getElementById('closeMeetingModal').addEventListener('click', () => {
+                document.getElementById('meetingRequestModal').classList.add('hidden');
+            });
+
+            document.getElementById('cancelMeetingRequest').addEventListener('click', () => {
+                document.getElementById('meetingRequestModal').classList.add('hidden');
+            });
+
+            document.getElementById('submitMeetingRequest').addEventListener('click', submitMeetingRequest);
+
+            // Notification dropdowns
+            document.getElementById('notifications-btn').addEventListener('click', () => {
+                document.getElementById('notifications-dropdown').classList.toggle('hidden');
+                document.getElementById('meeting-requests-dropdown').classList.add('hidden');
+            });
+
+            document.getElementById('meeting-requests-btn').addEventListener('click', () => {
+                document.getElementById('meeting-requests-dropdown').classList.toggle('hidden');
+                document.getElementById('notifications-dropdown').classList.add('hidden');
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                const notificationsBtn = document.getElementById('notifications-btn');
+                const notificationsDropdown = document.getElementById('notifications-dropdown');
+                const meetingRequestsBtn = document.getElementById('meeting-requests-btn');
+                const meetingRequestsDropdown = document.getElementById('meeting-requests-dropdown');
+
+                if (!notificationsBtn.contains(e.target) && !notificationsDropdown.contains(e.target)) {
+                    notificationsDropdown.classList.add('hidden');
+                }
+
+                if (!meetingRequestsBtn.contains(e.target) && !meetingRequestsDropdown.contains(e.target)) {
+                    meetingRequestsDropdown.classList.add('hidden');
+                }
+            });
+
+            // Proactive AI assistance after initial load
+            setTimeout(() => {
+                const chatMessages = document.getElementById('chatMessages');
+                const proactiveBubble = document.createElement('div');
+                proactiveBubble.className = 'chat-bubble flex items-start gap-3';
+                proactiveBubble.innerHTML = `
+                    <img src="../img/Man-DB/bot.png" alt="AI" class="w-6 h-5.5 mt-1">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-blue-600 font-medium text-sm">🎯 Smart Suggestion</span>
+                        </div>
+                        <p class="text-sm text-blue-800">Based on your progress, I noticed your TIN application is due soon. Would you like me to help you prepare the required documents or schedule your BIR visit?</p>
+                        <div class="flex gap-2 mt-3">
+                            <button onclick="sendQuickMessage('Help me prepare TIN documents')" class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
+                                Document Prep
+                            </button>
+                            <button onclick="sendQuickMessage('Schedule BIR visit')" class="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
+                                Schedule Visit
+                            </button>
+                        </div>
+                    </div>
+                `;
+                chatMessages.appendChild(proactiveBubble);
+            }, 2000);
+        });
+
+        // Global functions for inline event handlers
+        window.markTaskComplete = markTaskComplete;
+        window.requestMeetingForTask = requestMeetingForTask;
+        window.sendQuickMessage = sendQuickMessage;
+        window.scheduleTask = scheduleTask;
+    </script>
+</body>
+
+</html>

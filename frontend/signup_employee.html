@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStart - Manager Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.8s ease-out;
+            padding: 20px;
+        }
+
+        .signup-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .logo-container {
+            margin-bottom: 24px;
+        }
+
+        .smartstart-logo {
+            width: 48px;
+            height: 48px;
+            background: #B91C1C;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            padding: 8px;
+        }
+
+        .logo-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .app-title {
+            color: #B91C1C;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .app-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 32px;
+            line-height: 1.4;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            color: #374151;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #f9fafb;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #B91C1C;
+            box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+            background-color: white;
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b7280;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #B91C1C;
+        }
+
+        .forgot-password {
+            color: #B91C1C;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        .forgot-password:hover {
+            color: #991B1B;
+            text-decoration: underline;
+        }
+
+        .signup-btn {
+            width: 100%;
+            background: #B91C1C;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 24px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .signup-btn:hover {
+            background: #991B1B;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(185, 28, 28, 0.3);
+        }
+
+        .footer {
+            color: #9ca3af;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .footer a {
+            color: #B91C1C;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-icon {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+            margin-right: 8px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .signup-container {
+                margin: 20px;
+                padding: 32px 24px;
+            }
+
+            .app-title {
+                font-size: 24px;
+            }
+        }
+
+        /* Loading state for buttons */
+        .btn-loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn-loading::after {
+            content: '';
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="signup-container">
+    <div class="logo-container">
+        <div class="smartstart-logo">
+            <img src="../img/assets/smartstart-icon.png" alt="SmartStart Logo" class="logo-image">
+        </div>
+        <h1 class="app-title">SmartStart</h1>
+        <p class="app-subtitle">Sign in to your AI-powered onboarding platform</p>
+    </div>
+
+    <form class="signup-form" onsubmit="handleSignup(event)">
+        <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <input
+                    type="email"
+                    id="email"
+                    class="form-input"
+                    placeholder="Enter your email"
+                    required
+            >
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input
+                    type="password"
+                    id="password"
+                    class="form-input"
+                    placeholder="Enter your password"
+                    required
+            >
+        </div>
+
+        <div class="form-options">
+            <label class="remember-me">
+                <input type="checkbox" id="remember">
+                Remember me
+            </label>
+            <a href="#" class="forgot-password">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="signup-btn" id="signupBtn">
+            Sign Up <span style="margin-left:6px; position:relative; top:-2px;">❯</span>
+        </button>
+    </form>
+</div>
+
+<div class="footer">
+    Powered by <a href="#">SmartStart</a> — A BPI Innovation
+</div>
+
+<script>
+    function handleSignup(event) {
+        event.preventDefault();
+
+        const signupBtn = document.getElementById('signupBtn');
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        // Add loading state
+        signupBtn.classList.add('btn-loading');
+        signupBtn.textContent = 'Creating account...';
+
+        // Simulate signup process
+        setTimeout(() => {
+            // For demo purposes, accept any email/password
+            if (email && password) {
+                // Redirect to employee landing page after signup
+                alert('Manager account created successfully!');
+                window.location.href = 'Landing_Page-Employee.html';
+            } else {
+                // Reset button state
+                signupBtn.classList.remove('btn-loading');
+                signupBtn.innerHTML = 'Sign Up <span style="margin-left:6px; position:relative; top:-2px;">❯</span>';
+                alert('Please enter both email and password');
+            }
+        }, 1500);
+    }
+
+    // Auto-focus email field when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('email').focus();
+    });
+
+    // Add enter key handling
+    document.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter' && event.target.matches('.form-input')) {
+            const form = document.querySelector('.signup-form');
+            form.dispatchEvent(new Event('submit'));
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+{
+  "coaching_scripts": {
+    "weekly_checkin": {
+      "title": "Weekly Progress Check-in",
+      "category": "Regular 1:1 Meeting",
+      "description": "A structured weekly check-in to track progress and address challenges",
+      "points": [
+        "Review completion rates and discuss progress since last meeting",
+        "Identify any blockers, challenges, or resource needs",
+        "Provide constructive feedback and recognition for achievements",
+        "Set clear, measurable goals for the upcoming week",
+        "Schedule follow-up meetings and define next steps"
+      ],
+      "suggested_questions": [
+        "How are you feeling about your current progress?",
+        "What challenges have you encountered this week?",
+        "What support do you need to complete your upcoming tasks?",
+        "Are there any training materials that would be helpful?"
+      ]
+    },
+    "addressing_delays": {
+      "title": "Addressing Delays & Blockers",
+      "category": "Behind Schedule",
+      "description": "Supportive approach to addressing delays without blame",
+      "points": [
+        "Acknowledge delays without assigning blame - focus on solutions",
+        "Identify root causes and blocking factors preventing progress",
+        "Offer additional resources, training, or support as needed",
+        "Collaborate on realistic revised timelines and expectations",
+        "Implement more frequent check-ins and progress monitoring"
+      ],
+      "suggested_questions": [
+        "What specific obstacles are preventing you from completing tasks?",
+        "Would additional training or resources help you move forward?",
+        "How can we adjust the timeline to make it more manageable?",
+        "What would success look like for you this week?"
+      ]
+    }
+  },
+  "escalation_paths": [
+    {
+      "id": 1,
+      "title": "Escalate to HR",
+      "description": "Missing documents, policy clarification, or employment issues",
+      "contact": "hr@bpi.com.ph",
+      "response_time": "24 hours",
+      "department": "Human Resources",
+      "purpose": "Handle employment-related issues, missing documentation, policy questions, and personnel matters",
+      "icon": "../img/Man-DB/Resume.png"
+    },
+    {
+      "id": 2,
+      "title": "IT Support",
+      "description": "System access, technical issues, or software problems",
+      "contact": "it.support@bpi.com.ph",
+      "response_time": "2 hours",
+      "department": "Information Technology",
+      "purpose": "Resolve technical issues, system access problems, software installations, and IT equipment setup",
+      "icon": "../img/Man-DB/Laptop.png"
+    },
+    {
+      "id": 3,
+      "title": "Compliance Review",
+      "description": "Regulatory requirements, risk assessment, or audit issues",
+      "contact": "compliance@bpi.com.ph",
+      "response_time": "48 hours",
+      "department": "Compliance & Risk",
+      "purpose": "Address regulatory compliance issues, risk assessment concerns, audit requirements, and BSP-related matters",
+      "icon": "../img/Man-DB/Error.png"
+    },
+    {
+      "id": 4,
+      "title": "Training Support",
+      "description": "Learning materials, course access, or certification issues",
+      "contact": "training@bpi.com.ph",
+      "response_time": "4 hours",
+      "department": "Learning & Development",
+      "purpose": "Resolve training access issues, provide additional learning resources, schedule specialized training sessions",
+      "icon": "../img/Man-DB/pm.png"
+    }
+  ],
+  "escalation_history": [],
+  "notifications": []
+}

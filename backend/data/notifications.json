@@ -1,0 +1,40 @@
+{
+  "notifications": [
+    {
+      "id": 1756119493032,
+      "type": "meeting_response",
+      "title": "Meeting Request Accepted",
+      "message": "Your meeting request \"SAP Training Discussion\" has been accepted",
+      "recipient_ids": [
+        "emp_001"
+      ],
+      "meeting_request_id": "req_001",
+      "created_at": "2025-08-25T18:58:13.032802",
+      "read": false
+    },
+    {
+      "id": 1756119495110,
+      "type": "meeting_response",
+      "title": "Meeting Request Declined",
+      "message": "Your meeting request \"SAP Training Discussion\" has been declined",
+      "recipient_ids": [
+        "emp_001"
+      ],
+      "meeting_request_id": "req_001",
+      "created_at": "2025-08-25T18:58:15.110404",
+      "read": false
+    },
+    {
+      "id": 1756124739751,
+      "type": "meeting_invite",
+      "title": "Finance Meeting: Finance Team Meeting",
+      "message": "You have been invited to \"Finance Team Meeting\" on 2025-08-01 at 9:00 AM",
+      "recipient_ids": [
+        1
+      ],
+      "meeting_request_id": null,
+      "created_at": "2025-08-25T20:25:39.751353",
+      "read": false
+    }
+  ]
+}

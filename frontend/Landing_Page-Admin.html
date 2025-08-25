@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStart - AI-Powered Banking Onboarding</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hero-bgA::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('../img/Man-DB/herobgA.png');
+            background-size: 110%;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.40;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body class="bg-[#F4F3F0] font-sans flex flex-col min-h-screen">
+
+    <main class="flex-grow">
+        <!-- Header -->
+        <header class="sticky top-0 z-50 bg-white px-8 py-4 flex justify-between items-center shadow">
+            <div class="flex items-center space-x-2">
+                <img src="../img/Man-DB/smartstart_icon.png" alt="Logo" class="w-8 h-8 rounded-[5px]">
+                <div>
+                    <p class="text-lg font-bold text-red-700">SmartStart</p>
+                    <p class="text-xs text-gray-600 -mt-1">AI-Powered Banking Onboarding</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3 gap-2">
+                <div
+                    class="w-9 h-9 rounded-full bg-[#B90808] flex items-center justify-center text-white font-semibold">
+                    M</div>
+                <button onclick="window.location.href='login.html'"
+                        class="bg-[#B90808] hover:bg-red-800 text-white px-4 py-2 rounded-lg">
+                    Log out
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-bgA relative min-h-[91vh] flex items-start px-10 pt-20 text-left">
+            <div class="max-w-2xl pl-12">
+                <h1 class="text-5xl md:text-8xl font-bold text-red-700 mt-2 leading-tight">
+                    <span class="whitespace-nowrap">Elevate Your</span><br>
+                    Team’s Performance<br>
+                </h1>
+                <p class="text-black/60 text-lg mt-7 max-w-5lg">
+                    Empower your team leadership with intelligent meeting
+                    coordination. View availability, schedule efficiently, and automate the entire process.
+                </p>
+
+                <div class="gap-3 flex space-x-6 mt-8">
+                    <button onclick="window.location.href='Manager_DB.html'"
+                        class="group bg-[#CE0909] hover:bg-[#B90808] text-white px-9 py-3 rounded-lg transition font-semibold flex items-center">
+                        <span>Access Manager Dashboard</span>
+                    </button>
+
+                    <button onclick="window.location.href='Meeting-Orchestration.html'"
+                        class="bg-white text-gray-900 px-9 py-2 rounded-lg border hover:bg-gray-100 transition font-semibold">
+                        View Team Availability
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Welcome Section -->
+        <section class="py-28 rounded-b-2xl shadow-sm">
+            <div class="text-center px-6">
+                <h2 class="text-5xl font-bold text-red-700 mb-4">Welcome to the SmartStart Leadership Hub</h2>
+                <p class="text-gray-700 max-w-2xl mx-auto mb-12">
+                    Everything you need to orchestrate successful meetings, from initial planning to follow-up actions.
+                    Designed specifically for modern team leaders.
+                </p>
+
+                <!-- Features -->
+                <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto items-stretch">
+                    <!-- Card 1 -->
+                    <div
+                        class="bg-white border rounded-xl shadow-[0_5px_4px_rgba(0,0,0,0.2)] hover:shadow-[0_7px_6px_rgba(0,0,0,0.25)] transition p-8 text-left flex flex-col">
+                        <div class="w-12 h-12 rounded-lg bg-[#CB0A0A] flex items-center justify-center mb-4">
+                            <img src="../img/Man-DB/chatbot.png" alt="Chat Icon" class="w-7 h-7">
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Smart Conversational Interface</h3>
+                        <p class="text-gray-600 mb-6">
+                            24/7 AI chatbot providing personalized guidance and intelligent query routing for employees,
+                            especially for new hires.
+                        </p>
+                        <div class="mt-auto">
+                            <button onclick="window.location.href='chatbot.html'"
+                                class="w-full bg-[#CB0A0A] hover:bg-red-800 text-white font-semibold py-2 px-4 rounded-md transition">
+                                Start Chatting
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div
+                        class="bg-white border rounded-xl shadow-[0_5px_4px_rgba(0,0,0,0.2)] hover:shadow-[0_7px_6px_rgba(0,0,0,0.25)] transition p-8 text-left flex flex-col">
+                        <div class="w-12 h-12 rounded-lg bg-[#CB0A0A] flex items-center justify-center mb-4">
+                            <img src="../img/Man-DB/team.png" alt="Chat Icon" class="w-7 h-7">
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Team Scheduling Intelligence</h3>
+                        <p class="text-gray-600 mb-6">
+                            AI-powered meeting scheduler that automatically finds optimal time slots,
+                            sends confirmations, and creates meeting links for both team and one-on-one meetings.
+                        </p>
+                        <div class="mt-auto">
+                            <button onclick="window.location.href='Meeting-Orchestration.html'"
+                                class="w-full bg-[#CB0A0A] hover:bg-red-800 text-white font-semibold py-2 px-4 rounded-md transition">
+                                Start Scheduling
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white text-center text-sm py-4 border-t">
+        Powered by <span class="font-semibold text-yellow-600">SmartStart</span> —
+        <span class="font-semibold text-red-700">A BPI Innovation</span>
+    </footer>
+
+</body>
+
+</html>
