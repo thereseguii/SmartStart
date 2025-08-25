@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStart Manager Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loading-spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #dc2626;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .member-tooltip {
+            position: absolute;
+            z-index: 1000;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            min-width: 250px;
+        }
+
+        .equal-height-container {
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scrollable-content {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-[#F4F3F0] text-gray-900">
+    <!-- Header -->
+    <header
+        class="sticky top-0 z-50 bg-white px-8 py-4 flex justify-between items-center shadow-[0_6px_10px_rgba(0,0,0,0.15)]">
+        <div class="flex items-center space-x-2">
+            <button onclick="window.location.href='Landing_Page-Admin.html'">
+                <img src="../img/smartstart_icon.png" alt="SmartStart Logo" class="w-8 h-8 rounded-[5px]">
+            </button>
+            <div>
+                <p class="text-lg font-bold text-red-700">SmartStart</p>
+                <p class="text-xs text-gray-600 -mt-1">Finance Manager Dashboard</p>
+            </div>
+        </div>
+
+        <!-- Right section (Notifications + User) -->
+        <div class="flex items-center space-x-4">
+            <!-- Meeting Requests -->
+            <div class="relative">
+                <button id="meeting-requests-btn"
+                    class="relative p-2 text-gray-400 hover:text-gray-500 transition-colors">
+                    <img src="../img/requests.png" alt="Meeting Requests" class="w-6 h-6 rounded-[5px]">
+                    <span id="requests-badge"
+                        class="absolute -top-0 -right-0 bg-orange-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center notification-badge">3</span>
+                </button>
+
+                <!-- Dropdown -->
+                <div id="meeting-requests-dropdown"
+                    class="absolute right-0 mt-2 w-96 bg-white rounded-md shadow-lg py-1 z-50 hidden">
+                    <div class="px-4 py-2 border-b">
+                        <h3 class="text-sm font-medium text-gray-900">Meeting Requests</h3>
+                    </div>
+                    <div id="meeting-requests-content" class="max-h-96 overflow-y-auto">
+                        <!-- Meeting requests will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="relative">
+                <button id="notifications-btn" class="relative p-2 text-gray-400 hover:text-gray-500 transition-colors">
+                    <img src="../img/notification.png" alt="General Notifications" class="w-6 h-6 rounded-[5px]">
+                    <span id="notification-badge"
+                        class="absolute -top-0 -right-0 hidden bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center notification-badge">0</span>
+                </button>
+
+                <!-- Dropdown -->
+                <div id="notifications-dropdown"
+                    class="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50 hidden">
+                    <div class="px-4 py-2 border-b">
+                        <h3 class="text-sm font-medium text-gray-900">Notifications</h3>
+                    </div>
+                    <div id="notifications-list" class="max-h-96 overflow-y-auto">
+                        <!-- Notifications will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- User -->
+            <div class="flex items-center space-x-3 gap-2">
+                <div
+                    class="w-9 h-9 rounded-full bg-[#B90808] flex items-center justify-center text-white font-semibold">
+                    M</div>
+                <button class="bg-[#B90808] hover:bg-red-800 text-white px-4 py-2 rounded-[6px]">Log out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="px-6 py-6 space-y-10 overflow-y-auto max-w-7xl mx-auto">
+        <div class="relative max-w-7xl mx-auto">
+            <div class="absolute bottom-0 right-1.5 w-full h-full bg-[#AF0E0E] rounded-xl z-0"></div>
+
+            <div
+                class="relative bg-white p-6 rounded-xl flex justify-between items-center z-10 shadow-[0_6px_10px_rgba(0,0,0,0.2)]">
+                <div class="flex flex-col">
+                    <h2 class="font-bold text-xl text-red-800">
+                        BPI Finance Department - Meeting Dashboard
+                    </h2>
+                    <p class="text-sm text-gray-600 mt-1" id="stats-text">
+                        12 finance team members • 9 available • 3 meeting requests
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <section class="space-y-6">
+            <h3 class="font-semibold text-lg flex items-center gap-4 mb-6">
+                <div class="w-8 h-8 rounded-lg bg-[#CB0A0A] flex items-center justify-center">
+                    <img src="../img/timesheet-white.png" alt="Timesheet Icon" class="w-5 h-5">
+                </div>
+                Team Schedule & Availability
+            </h3>
+
+            <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                <!-- Team Members Section (1/4 width - LEFT SIDE) -->
+                <div class="xl:col-span-1">
+                    <div class="bg-white rounded-xl shadow-[0_6px_10px_rgba(0,0,0,0.15)] p-6 equal-height-container">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+                                <img src="../img/team-red.png" alt="Team Icon" class="w-5 h-5">
+                                Finance Team
+                                <span id="team-date-indicator" class="text-sm font-normal text-gray-500">
+                                    - Aug 23
+                                </span>
+                            </h4>
+                        </div>
+
+                        <!-- Team Members Grid -->
+                        <div class="equal-height-content">
+                            <div id="team-members-list" class="space-y-2 scrollable-content">
+                                <div class="text-center py-8">
+                                    <div class="loading-spinner mx-auto"></div>
+                                    <p class="text-sm text-gray-500 mt-2">Loading team members...</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Pagination Controls -->
+                            <div id="team-pagination" class="flex justify-between items-center mt-3 pt-3 border-t hidden">
+                                <button id="prev-members" class="p-1.5 text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onclick="handleMemberPagination('prev')">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                    </svg>
+                                </button>
+                                <span id="members-page-info" class="text-xs text-gray-500 px-2">
+                                    Page 1 of 2
+                                </span>
+                                <button id="next-members" class="p-1.5 text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onclick="handleMemberPagination('next')">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar & Availability Section (3/4 width - RIGHT SIDE) -->
+                <div class="xl:col-span-3">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Compact Team Schedule Calendar -->
+                        <div class="bg-white rounded-xl shadow-[0_6px_10px_rgba(0,0,0,0.15)] p-6 equal-height-container">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 id="schedule-title"
+                                    class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                                    <img src="../img/calendar.png" alt="Calendar Icon" class="w-5 h-5">
+                                    Calendar
+                                </h4>
+                                <div class="flex items-center space-x-2">
+                                    <button id="prev-month" class="p-1 hover:bg-gray-100 rounded transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 19l-7-7 7-7"></path>
+                                        </svg>
+                                    </button>
+                                    <span id="current-month"
+                                        class="font-medium text-gray-900 min-w-[120px] text-center text-sm">
+                                        August 2025
+                                    </span>
+                                    <button id="next-month" class="p-1 hover:bg-gray-100 rounded transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Compact Calendar -->
+                            <div class="flex-1 flex flex-col">
+                                <div class="grid grid-cols-7 gap-1 mb-2 text-xs">
+                                    <!-- Day Headers -->
+                                    <div class="p-1 text-center font-medium text-gray-600">Mo</div>
+                                    <div class="p-1 text-center font-medium text-gray-600">Tu</div>
+                                    <div class="p-1 text-center font-medium text-gray-600">We</div>
+                                    <div class="p-1 text-center font-medium text-gray-600">Th</div>
+                                    <div class="p-1 text-center font-medium text-gray-600">Fr</div>
+                                    <div class="p-1 text-center font-medium text-gray-600">Sa</div>
+                                    <div class="p-1 text-center font-medium text-gray-600">Su</div>
+
+                                    <!-- Calendar days will be populated here -->
+                                    <div id="calendar-days" class="contents"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Availability Section -->
+                        <div class="bg-white rounded-xl shadow-[0_6px_10px_rgba(0,0,0,0.15)] p-6 equal-height-container">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-2 min-w-0 flex-1">
+                                    <img id="availability-icon" src="../img/timesheet.png" alt="Timesheet Icon"
+                                        class="w-5 h-7 flex-shrink-0">
+                                    <h4 id="availability-title" class="text-lg font-semibold text-gray-900 truncate">
+                                        Team Availability - Aug 23
+                                    </h4>
+                                </div>
+                                <button id="back-to-team"
+                                    class="text-sm text-[#B90808] hover:text-red-800 hidden transition-colors whitespace-nowrap ml-2">
+                                    ← Team View
+                                </button>
+                            </div>
+
+                            <div id="availability-container" class="space-y-2 overflow-y-auto">
+                                <div class="text-center py-8">
+                                    <div class="loading-spinner mx-auto"></div>
+                                    <p class="text-sm text-gray-500 mt-2">Loading availability...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Meeting Modal -->
+    <div id="email-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div
+            class="bg-white rounded-xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto shadow-[0_6px_10px_rgba(0,0,0,0.2)]">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                    <img src="../img/calendar.png" alt="Calendar Icon" class="w-5 h-5">
+                    Schedule Finance Meeting
+                </h3>
+                <button id="close-modal" class="text-gray-400 hover:text-gray-600 p-1 hover:bg-gray-100 rounded">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Selected Time Slot</label>
+                    <p id="selected-slot" class="text-sm text-gray-900 bg-[#F6F4EE] p-2 rounded">
+                        August 23, 2:00 PM
+                    </p>
+                </div>
+
+                <div id="attendees-section">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Finance Team Attendees</label>
+                    <div id="available-attendees"
+                        class="max-h-40 overflow-y-auto border border-gray-300 bg-[#F6F4EE] rounded p-3 space-y-2 shadow-[0_6px_10px_rgba(0,0,0,0.15)]">
+                        <!-- Attendees will be populated here -->
+                    </div>
+                </div>
+
+                <div id="meeting-type-section">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Meeting Type</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" name="meeting-type" value="team" class="text-[#B90808]">
+                            <span class="text-sm flex items-center gap-1">
+                                <img src="../img/office.png" alt="Office Icon" class="w-4 h-4">
+                                Finance Team Meeting (5+ members)
+                            </span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" name="meeting-type" value="small" class="text-[#B90808]">
+                            <span class="text-sm flex items-center gap-1">
+                                <img src="../img/team-red.png" alt="Team Icon" class="w-4 h-4">
+                                Small Group (2-4 members)
+                            </span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" name="meeting-type" value="individual" class="text-[#B90808]">
+                            <span class="text-sm flex items-center gap-1">
+                                <img src="../img/user.png" alt="User Icon" class="w-4 h-4">
+                                One-on-One
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Meeting Title</label>
+                    <input id="meeting-title" type="text"
+                        class="w-full p-2 border border-gray-300 rounded bg-[#F6F4EE] shadow-[0_6px_10px_rgba(0,0,0,0.15)]"
+                        placeholder="e.g., Q3 Budget Review">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Duration</label>
+                        <select id="meeting-duration"
+                            class="w-full p-2 border border-gray-300 rounded bg-[#F6F4EE] text-sm shadow-[0_6px_10px_rgba(0,0,0,0.15)]">
+                            <option>30 minutes</option>
+                            <option>45 minutes</option>
+                            <option>60 minutes</option>
+                            <option>90 minutes</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Video Platform</label>
+                        <select id="video-platform"
+                            class="w-full p-2 border border-gray-300 rounded bg-[#F6F4EE] text-sm shadow-[0_6px_10px_rgba(0,0,0,0.15)]">
+                            <option value="google_meet">
+                                <span class="flex items-center gap-1">
+                                    <img src="../img/video.png" alt="Video Icon" class="w-4 h-4 inline">
+                                    Google Meet
+                                </span>
+                            </option>
+                            <option value="zoom">
+                                <span class="flex items-center gap-1">
+                                    <img src="../img/video.png" alt="Video Icon" class="w-4 h-4 inline">
+                                    Zoom
+                                </span>
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Agenda</label>
+                    <textarea id="meeting-agenda"
+                        class="w-full p-2 border border-gray-300 rounded bg-[#F6F4EE] h-16 text-sm shadow-[0_6px_10px_rgba(0,0,0,0.15)]"
+                        placeholder="Enter financial meeting agenda"></textarea>
+                </div>
+
+                <div>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="use-ai" class="rounded text-[#B90808]">
+                        <span class="text-sm text-gray-700 flex items-center gap-1">
+                            <img src="../img/bot.png" alt="AI Icon" class="w-4 h-3">
+                            Generate AI finance agenda
+                        </span>
+                    </label>
+                </div>
+
+                <div class="flex space-x-3">
+                    <button id="cancel-meeting"
+                        class="flex-1 bg-gray-300 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-400 transition-colors">
+                        Cancel
+                    </button>
+                    <button id="send-invitation"
+                        class="flex-1 bg-[#B90808] text-white py-2 rounded-lg text-sm font-medium hover:bg-red-800 transition-colors flex items-center justify-center gap-2">
+                        <img src="../img/Gmail-logo-white.png" alt="Email Icon" class="w-4 h-4">
+                        <span id="send-text">Send Invitations</span>
+                        <div id="send-spinner" class="loading-spinner mx-auto hidden"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Details Tooltip -->
+    <div id="member-tooltip" class="member-tooltip hidden">
+        <div id="tooltip-content"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white text-center text-sm py-4 border-t mt-5">
+        Powered by <span class="font-semibold text-yellow-600">SmartStart</span> —
+        <span class="font-semibold text-red-700">A BPI Innovation</span>
+    </footer>
+
+    <script>
+        // Global state
+        let currentDate = new Date(2025, 7, 1); // August 2025
+        let selectedDate = 22;
+        let selectedMember = null;
+        let teamMembers = [];
+        let meetingRequests = [];
+        let notifications = [];
+        let currentAvailability = [];
+        let selectedTimeSlot = null;
+        let loading = false;
+        
+        // Pagination state for team members
+        let currentMemberPage = 1;
+        const membersPerPage = 4;
+
+        // Current manager info
+        const MANAGER_ID = 'mgr_001';
+        const MANAGER_NAME = 'Maria Santos';
+
+        // API configuration
+        const API_BASE = 'http://localhost:5000/api';
+
+        // API service
+        const apiService = {
+            async get(endpoint) {
+                const response = await fetch(`${API_BASE}${endpoint}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            },
+
+            async post(endpoint, data) {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            },
+
+            async patch(endpoint, data) {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            }
+        };
+
+        // Utility functions
+        function getAvailabilityColor(status) {
+            const colors = {
+                'poor': 'bg-red-600',      // ≤5 members available
+                'limited': 'bg-orange-500', // 6-8 members available  
+                'excellent': 'bg-green-600' // 9-12 members available
+            };
+            return colors[status] || 'bg-gray-400';
+        }
+
+        function formatMonth(date) {
+            return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        }
+
+        function formatDateForAPI(day) {
+            return `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        }
+
+        function getDaysInMonth(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = (firstDay.getDay() + 6) % 7; // Convert to Monday = 0
+
+            const days = [];
+
+            for (let i = 0; i < startingDayOfWeek; i++) {
+                days.push(null);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                days.push(day);
+            }
+
+            return days;
+        }
+
+        // Enhanced DOM manipulation functions
+        async function updateStats() {
+            try {
+                const stats = await apiService.get('/stats');
+                document.getElementById('stats-text').textContent =
+                    `${stats.total_members} finance team members • ${stats.available_members} available • ${stats.pending_requests} meeting requests`;
+
+                // Update notification badges
+                const notificationBadge = document.getElementById('notification-badge');
+                if (stats.unread_notifications > 0) {
+                    notificationBadge.textContent = stats.unread_notifications;
+                    notificationBadge.classList.remove('hidden');
+                } else {
+                    notificationBadge.classList.add('hidden');
+                }
+
+                const requestsBadge = document.getElementById('requests-badge');
+                if (stats.pending_requests > 0) {
+                    requestsBadge.textContent = stats.pending_requests;
+                    requestsBadge.classList.remove('hidden');
+                } else {
+                    requestsBadge.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+
+        function renderTeamMembers() {
+            const container = document.getElementById('team-members-list');
+            const dateIndicator = document.getElementById('team-date-indicator');
+            const pagination = document.getElementById('team-pagination');
+            const pageInfo = document.getElementById('members-page-info');
+            const prevBtn = document.getElementById('prev-members');
+            const nextBtn = document.getElementById('next-members');
+
+            // Update date indicator
+            dateIndicator.textContent = `- ${formatMonth(currentDate).split(' ')[0]} ${selectedDate}`;
+
+            container.innerHTML = '';
+
+            if (teamMembers.length === 0) {
+                pagination.classList.add('hidden');
+                container.innerHTML = '<div class="text-center py-8"><p class="text-sm text-gray-500">No team members found</p></div>';
+                return;
+            }
+
+            // Calculate pagination
+            const totalPages = Math.ceil(teamMembers.length / membersPerPage);
+            const startIndex = (currentMemberPage - 1) * membersPerPage;
+            const endIndex = startIndex + membersPerPage;
+            const currentMembers = teamMembers.slice(startIndex, endIndex);
+
+            // Show/hide pagination based on need
+            if (totalPages > 1) {
+                pagination.classList.remove('hidden');
+                pageInfo.textContent = `Page ${currentMemberPage} of ${totalPages}`;
+                prevBtn.disabled = currentMemberPage === 1;
+                nextBtn.disabled = currentMemberPage === totalPages;
+            } else {
+                pagination.classList.add('hidden');
+            }
+
+            // Render current page of members
+            currentMembers.forEach(member => {
+                const memberCard = document.createElement('button');
+                memberCard.className = `w-full flex items-center space-x-3 p-3 rounded-lg transition-all hover:bg-gray-50 ${selectedMember?.id === member.id ? 'bg-red-50 border-2 border-red-200' : 'border border-gray-200'
+                    }`;
+
+                memberCard.innerHTML = `
+                    <img src="${member.icon}" alt="${member.name}" class="w-8 h-8 rounded-full">
+                    <div class="text-left flex-1">
+                        <p class="text-sm font-medium text-gray-900">${member.name}</p>
+                        <p class="text-xs text-gray-600">${member.role}</p>
+                    </div>
+                `;
+
+                memberCard.addEventListener('click', () => handleMemberClick(member));
+                container.appendChild(memberCard);
+            });
+        }
+
+        function handleMemberPagination(direction) {
+            const totalPages = Math.ceil(teamMembers.length / membersPerPage);
+            
+            if (direction === 'next' && currentMemberPage < totalPages) {
+                currentMemberPage++;
+            } else if (direction === 'prev' && currentMemberPage > 1) {
+                currentMemberPage--;
+            }
+            
+            renderTeamMembers();
+        }
+
+        function renderMeetingRequests() {
+            const container = document.getElementById('meeting-requests-content');
+
+            // Get meeting requests for this manager
+            apiService.get(`/employee/${MANAGER_ID}/meeting-requests`)
+                .then(data => {
+                    const pendingRequests = data.meeting_requests.filter(req =>
+                        req.status === 'pending' && req.to_user === MANAGER_ID
+                    );
+
+                    if (pendingRequests.length === 0) {
+                        container.innerHTML = '<div class="px-4 py-8 text-center text-sm text-gray-500">No pending meeting requests</div>';
+                        return;
+                    }
+
+                    container.innerHTML = '';
+
+                    pendingRequests.forEach(request => {
+                        const requestCard = document.createElement('div');
+                        requestCard.className = 'px-4 py-3 border-b hover:bg-gray-50';
+
+                        const proposedTime = new Date(request.proposed_datetime).toLocaleString();
+
+                        requestCard.innerHTML = `
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-900">${request.title}</p>
+                                    <p class="text-xs text-gray-600">${request.description}</p>
+                                    <p class="text-xs text-gray-500 mt-1">📅 ${proposedTime}</p>
+                                    <p class="text-xs text-${request.priority === 'URGENT' ? 'red' : request.priority === 'HIGH' ? 'orange' : 'blue'}-600">Priority: ${request.priority}</p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="handleMeetingRequestAction('${request.id}', 'accepted')" 
+                                        class="flex-1 bg-[#B90808] text-white px-3 py-1 rounded text-xs font-medium hover:bg-red-800 transition-colors">
+                                    ✓ Accept
+                                </button>
+                                <button onclick="handleMeetingRequestAction('${request.id}', 'declined')" 
+                                        class="flex-1 bg-red-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-red-700 transition-colors">
+                                    ✗ Decline
+                                </button>
+                            </div>
+                        `;
+                        container.appendChild(requestCard);
+                    });
+                })
+                .catch(error => console.error('Failed to load meeting requests:', error));
+        }
+
+        function renderCalendar() {
+            const container = document.getElementById('calendar-days');
+            const days = getDaysInMonth(currentDate);
+
+            container.innerHTML = '';
+
+            days.forEach((day, index) => {
+                const dayButton = document.createElement('button');
+                dayButton.className = `calendar-day p-2 text-center text-sm rounded-lg transition-colors ${day
+                    ? selectedDate === day
+                        ? 'bg-[#B90808] text-white'
+                        : 'hover:bg-gray-100 text-gray-900'
+                    : ''
+                    }`;
+                dayButton.textContent = day || '';
+                dayButton.disabled = !day;
+
+                if (day) {
+                    dayButton.addEventListener('click', () => handleDateClick(day));
+                }
+
+                container.appendChild(dayButton);
+            });
+
+            document.getElementById('current-month').textContent = formatMonth(currentDate);
+        }
+
+        function renderAvailability() {
+            const container = document.getElementById('availability-container');
+            const title = document.getElementById('availability-title');
+            const icon = document.getElementById('availability-icon');
+
+            if (loading) {
+                container.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="loading-spinner mx-auto"></div>
+                        <p class="text-sm text-gray-500 mt-2">Loading availability...</p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (selectedMember) {
+                // Improved single line title for member schedule
+                title.textContent = `${selectedMember.name} - ${formatMonth(currentDate).split(' ')[0]} ${selectedDate}`;
+            } else {
+                title.textContent = `Team Availability - ${formatMonth(currentDate).split(' ')[0]} ${selectedDate}`;
+                icon.src = '../img/timesheet.png';
+                icon.alt = 'Timesheet Icon';
+            }
+
+            container.innerHTML = '';
+
+            if (currentAvailability.length === 0) {
+                container.innerHTML = '<div class="text-center py-8"><p class="text-sm text-gray-500">No availability data for this date</p></div>';
+                return;
+            }
+
+            currentAvailability.forEach(slot => {
+                const slotDiv = document.createElement('div');
+                slotDiv.className = 'relative';
+
+                if (selectedMember) {
+                    // Individual member schedule view
+                    slotDiv.innerHTML = `
+                        <div class="p-3 rounded-lg border-2 transition-all ${slot.available
+                            ? 'bg-red-50 border-red-200 cursor-pointer hover:bg-red-100'
+                            : 'bg-gray-50 border-gray-200'
+                        }"
+                        ${slot.available ? `onclick="openEmailModal('${slot.time}', [${selectedMember.id}])"` : ''}>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="font-medium text-gray-900">${slot.time}</span>
+                                    ${slot.meeting ? `<span class="ml-2 text-sm text-gray-600">- ${slot.meeting}</span>` : ''}
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium ${slot.available
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800'
+                        }">
+                                        ${slot.available ? '✅ Available' : '⏱️ Busy'}
+                                    </span>
+                                    ${slot.available ? `
+    <img src="../img/Gmail-logo.png" alt="Gmail Icon" class="w-4 h-4 filter brightness-0 invert">
+` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Team availability view with fixed color logic
+                    const canSchedule = slot.canScheduleTeam || slot.canScheduleSmall;
+                    const statusText = slot.availableCount <= 5 ? 'Few available' :
+                        slot.availableCount <= 8 ? 'Good availability' :
+                            'Excellent availability';
+
+                    slotDiv.innerHTML = `
+                        <div class="${getAvailabilityColor(slot.status)} text-white p-3 rounded-lg transition-all ${canSchedule ? 'cursor-pointer hover:opacity-90' : 'opacity-75'}"
+                             ${canSchedule ? `onclick="openTeamEmailModal('${slot.time}', ${JSON.stringify(slot).replace(/"/g, '&quot;')})" onmouseenter="showMemberTooltip(this, ${JSON.stringify(slot).replace(/"/g, '&quot;')})" onmouseleave="hideMemberTooltip()"` : ''}>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <div class="text-sm font-medium">${slot.time}</div>
+                                    <div class="text-xs opacity-90">
+                                        ${slot.availableCount}/${teamMembers.length} available • ${statusText}
+                                    </div>
+                                </div>
+                                ${canSchedule ? `
+    <img src="../img/Gmail-logo.png" alt="Email Icon" class="w-5 h-5 filter brightness-0 invert">
+` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                container.appendChild(slotDiv);
+            });
+        }
+
+        function renderAttendeesSelection(slotData) {
+            const container = document.getElementById('available-attendees');
+            const section = document.getElementById('attendees-section');
+            const meetingTypeSection = document.getElementById('meeting-type-section');
+
+            if (selectedMember) {
+                section.style.display = 'none';
+                meetingTypeSection.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+            meetingTypeSection.style.display = 'block';
+            container.innerHTML = '';
+
+            // Available members
+            if (slotData.availableMembers && slotData.availableMembers.length > 0) {
+                const availableDiv = document.createElement('div');
+                availableDiv.innerHTML = '<h4 class="text-sm font-medium text-green-700 mb-2">✅ Available Finance Team Members</h4>';
+                container.appendChild(availableDiv);
+
+                slotData.availableMembers.forEach(member => {
+                    const attendeeDiv = document.createElement('div');
+                    attendeeDiv.innerHTML = `
+                        <label class="flex items-center space-x-2 p-2 hover:bg-green-50 rounded">
+                            <input type="checkbox" checked class="rounded attendee-checkbox text-green-600" data-id="${member.id}">
+                            <span class="text-sm">${member.avatar} ${member.name}</span>
+                            <span class="text-xs text-gray-500 ml-auto">${member.role}</span>
+                        </label>
+                    `;
+                    container.appendChild(attendeeDiv);
+                });
+            }
+
+            // Unavailable members
+            if (slotData.unavailableMembers && slotData.unavailableMembers.length > 0) {
+                const unavailableDiv = document.createElement('div');
+                unavailableDiv.innerHTML = '<h4 class="text-sm font-medium text-red-700 mb-2 mt-3">⏱️ Unavailable Members</h4>';
+                container.appendChild(unavailableDiv);
+
+                slotData.unavailableMembers.forEach(member => {
+                    const attendeeDiv = document.createElement('div');
+                    attendeeDiv.innerHTML = `
+                        <div class="flex items-center space-x-2 p-2 bg-red-50 rounded opacity-60">
+                            <span class="text-sm">${member.avatar} ${member.name}</span>
+                            <span class="text-xs text-red-600 ml-auto">${member.reason}</span>
+                        </div>
+                    `;
+                    container.appendChild(attendeeDiv);
+                });
+            }
+
+            // Set default meeting type based on availability
+            const teamRadio = document.querySelector('input[name="meeting-type"][value="team"]');
+            const smallRadio = document.querySelector('input[name="meeting-type"][value="small"]');
+            const individualRadio = document.querySelector('input[name="meeting-type"][value="individual"]');
+
+            if (slotData.canScheduleTeam) {
+                teamRadio.checked = true;
+                teamRadio.disabled = false;
+            } else {
+                teamRadio.disabled = true;
+            }
+
+            if (slotData.canScheduleSmall) {
+                if (!slotData.canScheduleTeam) smallRadio.checked = true;
+                smallRadio.disabled = false;
+            } else {
+                smallRadio.disabled = true;
+            }
+
+            individualRadio.disabled = slotData.availableMembers.length === 0;
+        }
+
+        // Event handlers
+        function handleMemberClick(member) {
+            selectedMember = selectedMember?.id === member.id ? null : member;
+            updateScheduleTitle();
+            loadAvailabilityData();
+            renderTeamMembers();
+        }
+
+        async function handleDateClick(day) {
+            selectedDate = day;
+            // Reset to first page when date changes
+            currentMemberPage = 1;
+            await loadTeamMembersForDate();
+            await loadAvailabilityData();
+            renderCalendar();
+            renderTeamMembers();
+            updateAvailabilityTitle();
+        }
+
+        function showMemberTooltip(element, slotData) {
+            const tooltip = document.getElementById('member-tooltip');
+            const content = document.getElementById('tooltip-content');
+
+            let html = '<div class="space-y-2">';
+
+            if (slotData.availableMembers && slotData.availableMembers.length > 0) {
+                html += '<div><h4 class="text-sm font-medium text-green-700 mb-1">✅ Available (' + slotData.availableMembers.length + ')</h4>';
+                html += '<div class="space-y-1">';
+                slotData.availableMembers.slice(0, 5).forEach(member => {
+                    html += `<div class="flex items-center space-x-2 text-xs">
+                        <span>${member.avatar}</span>
+                        <span>${member.name}</span>
+                    </div>`;
+                });
+                if (slotData.availableMembers.length > 5) {
+                    html += `<div class="text-xs text-gray-500">+${slotData.availableMembers.length - 5} more</div>`;
+                }
+                html += '</div></div>';
+            }
+
+            if (slotData.unavailableMembers && slotData.unavailableMembers.length > 0) {
+                html += '<div><h4 class="text-sm font-medium text-red-700 mb-1">⏱️ Unavailable (' + slotData.unavailableMembers.length + ')</h4>';
+                html += '<div class="space-y-1">';
+                slotData.unavailableMembers.slice(0, 3).forEach(member => {
+                    html += `<div class="flex items-center space-x-2 text-xs">
+                        <span>${member.avatar}</span>
+                        <span>${member.name}</span>
+                        <span class="text-red-600 ml-auto">${member.reason}</span>
+                    </div>`;
+                });
+                if (slotData.unavailableMembers.length > 3) {
+                    html += `<div class="text-xs text-gray-500">+${slotData.unavailableMembers.length - 3} more</div>`;
+                }
+                html += '</div></div>';
+            }
+
+            html += '</div>';
+            content.innerHTML = html;
+
+            // Position tooltip
+            const rect = element.getBoundingClientRect();
+            tooltip.style.left = Math.max(10, rect.left + window.pageXOffset - 150) + 'px';
+            tooltip.style.top = (rect.top + window.pageYOffset - 10) + 'px';
+            tooltip.classList.remove('hidden');
+        }
+
+        function hideMemberTooltip() {
+            document.getElementById('member-tooltip').classList.add('hidden');
+        }
+
+        async function handleMeetingRequestAction(requestId, action) {
+            const reason = action === 'declined' ? prompt('Please provide a reason for declining:') : '';
+
+            try {
+                await apiService.post(`/meeting/request/${requestId}/respond`, {
+                    response: action,
+                    reason: reason || ''
+                });
+
+                renderMeetingRequests();
+                updateStats();
+                loadNotifications();
+            } catch (error) {
+                alert('Failed to respond to meeting request');
+            }
+        }
+
+        function openTeamEmailModal(time, slotData) {
+            selectedTimeSlot = { time, slotData };
+            document.getElementById('email-modal').classList.remove('hidden');
+
+            // Pre-populate with selected date and time
+            const dateStr = `${formatMonth(currentDate).split(' ')[0]} ${selectedDate}`;
+            document.getElementById('selected-slot').textContent = `${dateStr}, ${time}`;
+            document.getElementById('modal-title').innerHTML = `
+                <img src="../img/calendar.png" alt="Calendar Icon" class="w-5 h-5">
+                Schedule Finance Meeting
+            `;
+
+            renderAttendeesSelection(slotData);
+        }
+
+        function openEmailModal(time, memberIds) {
+            const availableMembers = memberIds.map(id =>
+                teamMembers.find(m => m.id === id)
+            ).filter(Boolean);
+
+            const slotData = {
+                availableMembers,
+                unavailableMembers: [],
+                canScheduleTeam: availableMembers.length >= 5,
+                canScheduleSmall: availableMembers.length >= 2
+            };
+
+            openTeamEmailModal(time, slotData);
+        }
+
+        function closeEmailModal() {
+            document.getElementById('email-modal').classList.add('hidden');
+            selectedTimeSlot = null;
+            // Reset form
+            document.getElementById('meeting-title').value = '';
+            document.getElementById('meeting-agenda').value = '';
+            document.getElementById('use-ai').checked = false;
+            document.getElementById('video-platform').value = 'google_meet';
+        }
+
+        async function sendMeetingInvitation() {
+            const sendBtn = document.getElementById('send-invitation');
+            const sendText = document.getElementById('send-text');
+            const sendSpinner = document.getElementById('send-spinner');
+
+            sendText.classList.add('hidden');
+            sendSpinner.classList.remove('hidden');
+            sendBtn.disabled = true;
+
+            try {
+                let attendeeIds = [];
+                let attendeeNames = [];
+
+                if (selectedMember) {
+                    // Individual meeting
+                    attendeeIds = [selectedMember.id];
+                    attendeeNames = [selectedMember.name];
+                } else {
+                    // Team/group meeting - get selected attendees
+                    const checkboxes = document.querySelectorAll('.attendee-checkbox:checked');
+                    attendeeIds = Array.from(checkboxes).map(cb => parseInt(cb.dataset.id));
+                    attendeeNames = attendeeIds.map(id =>
+                        teamMembers.find(m => m.id === id)?.name
+                    ).filter(Boolean);
+                }
+
+                const meetingData = {
+                    title: document.getElementById('meeting-title').value || 'Finance Team Meeting',
+                    date: formatDateForAPI(selectedDate),
+                    time: selectedTimeSlot.time,
+                    attendees: attendeeNames,
+                    attendeeIds: attendeeIds,
+                    agenda: document.getElementById('meeting-agenda').value || '',
+                    duration: document.getElementById('meeting-duration').value || '30 minutes',
+                    video_platform: document.getElementById('video-platform').value || 'google_meet',
+                    use_ai: document.getElementById('use-ai').checked
+                };
+
+                const result = await apiService.post('/meetings', meetingData);
+
+                // Refresh notifications and stats
+                await loadNotifications();
+                await updateStats();
+
+                setTimeout(() => {
+                    closeEmailModal();
+                    sendText.classList.remove('hidden');
+                    sendSpinner.classList.add('hidden');
+                    sendBtn.disabled = false;
+
+                    if (result && result.success) {
+                        let message = '✅ Finance meeting invitation sent successfully! 📧\n\n';
+                        if (result.meeting_link_data) {
+                            message += `🔗 Meeting Link: ${result.meeting_link_data.url}\n`;
+                            if (result.meeting_link_data.meeting_id) {
+                                message += `🆔 Meeting ID: ${result.meeting_link_data.meeting_id}\n`;
+                                message += `🔐 Passcode: ${result.meeting_link_data.passcode}\n`;
+                            }
+                        }
+                        if (result.ai_agenda) {
+                            message += '\n🤖 AI-generated finance agenda included!';
+                        }
+                        alert(message);
+                    } else {
+                        alert('Finance meeting created successfully! 🎉');
+                    }
+                }, 1500);
+            } catch (error) {
+                setTimeout(() => {
+                    closeEmailModal();
+                    sendText.classList.remove('hidden');
+                    sendSpinner.classList.add('hidden');
+                    sendBtn.disabled = false;
+                    alert('Failed to create meeting. Please try again.');
+                }, 1500);
+            }
+        }
+
+        // Data loading functions
+        async function loadInitialData() {
+            await Promise.all([
+                loadTeamMembersForDate(),
+                loadNotifications(),
+                updateStats()
+            ]);
+            // Reset pagination when loading initial data
+            currentMemberPage = 1;
+            renderTeamMembers();
+            renderMeetingRequests();
+            renderNotifications();
+            await loadAvailabilityData();
+        }
+
+        async function loadTeamMembersForDate() {
+            const date = formatDateForAPI(selectedDate);
+            teamMembers = await apiService.get(`/teams/members/${date}`);
+        }
+
+        async function loadNotifications() {
+            try {
+                const data = await apiService.get(`/user/${MANAGER_ID}/notifications`);
+                notifications = data.notifications || [];
+                renderNotifications();
+            } catch (error) {
+                console.error('Failed to load notifications:', error);
+            }
+        }
+
+        function renderNotifications() {
+            const container = document.getElementById('notifications-list');
+
+            if (notifications.length === 0) {
+                container.innerHTML = '<div class="px-4 py-8 text-center text-sm text-gray-500">No notifications</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+
+            notifications.slice(0, 10).forEach(notification => {
+                const notifDiv = document.createElement('div');
+                notifDiv.className = `px-4 py-3 border-b hover:bg-gray-50 cursor-pointer ${notification.read ? 'opacity-60' : ''}`;
+                notifDiv.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0 mt-0.5">
+                            ${notification.type === 'meeting_request' ? '📅' :
+                        notification.type === 'meeting_response' ? '🔄' :
+                            notification.type === 'task_completed' ? '✅' : '🔔'}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900">${notification.title}</p>
+                            <p class="text-xs text-gray-600">${notification.message}</p>
+                            <p class="text-xs text-gray-400 mt-1">${new Date(notification.created_at).toLocaleString()}</p>
+                        </div>
+                        ${!notification.read ? '<div class="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 mt-2"></div>' : ''}
+                    </div>
+                `;
+
+                notifDiv.addEventListener('click', () => markNotificationRead(notification.id));
+                container.appendChild(notifDiv);
+            });
+        }
+
+        async function markNotificationRead(notificationId) {
+            try {
+                await apiService.post(`/user/${MANAGER_ID}/notifications/${notificationId}/read`);
+                await loadNotifications();
+                await updateStats();
+            } catch (error) {
+                console.error('Failed to mark notification as read:', error);
+            }
+        }
+
+        async function loadAvailabilityData() {
+            if (teamMembers.length === 0) return;
+
+            loading = true;
+            renderAvailability();
+
+            try {
+                const date = formatDateForAPI(selectedDate);
+                if (selectedMember) {
+                    currentAvailability = await apiService.get(`/schedules/member/${selectedMember.id}/${date}`);
+                } else {
+                    currentAvailability = await apiService.get(`/schedules/team/${date}`);
+                }
+            } finally {
+                loading = false;
+                renderAvailability();
+            }
+        }
+
+        function updateScheduleTitle() {
+            const title = document.getElementById('schedule-title');
+            const backBtn = document.getElementById('back-to-team');
+
+            if (selectedMember) {
+                backBtn.classList.remove('hidden');
+            } else {
+                title.innerHTML = `
+                    <img src="../img/calendar.png" alt="Calendar Icon" class="w-5 h-5">
+                    Calendar
+                `;
+                backBtn.classList.add('hidden');
+            }
+        }
+
+        function updateAvailabilityTitle() {
+            const title = document.getElementById('availability-title');
+            if (selectedMember) {
+                title.textContent = `${selectedMember.name} - ${formatMonth(currentDate).split(' ')[0]} ${selectedDate}`;
+            } else {
+                title.textContent = `Team Availability - ${formatMonth(currentDate).split(' ')[0]} ${selectedDate}`;
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function () {
+            loadInitialData();
+            renderCalendar();
+
+            // Calendar navigation
+            document.getElementById('prev-month').addEventListener('click', () => {
+                currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+                renderCalendar();
+            });
+
+            document.getElementById('next-month').addEventListener('click', () => {
+                currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+                renderCalendar();
+            });
+
+            // Back to team view
+            document.getElementById('back-to-team').addEventListener('click', () => {
+                selectedMember = null;
+                updateScheduleTitle();
+                loadAvailabilityData();
+                renderTeamMembers();
+            });
+
+            // Team members pagination - Remove these event listeners since we're using onclick
+            // document.getElementById('prev-members').addEventListener('click', () => {
+            //     handleMemberPagination('prev');
+            // });
+
+            // document.getElementById('next-members').addEventListener('click', () => {
+            //     handleMemberPagination('next');
+            // });
+
+            // Meeting Requests
+            document.getElementById('meeting-requests-btn').addEventListener('click', () => {
+                const dropdown = document.getElementById('meeting-requests-dropdown');
+                dropdown.classList.toggle('hidden');
+                document.getElementById('notifications-dropdown').classList.add('hidden');
+            });
+
+            // Notifications
+            document.getElementById('notifications-btn').addEventListener('click', () => {
+                const dropdown = document.getElementById('notifications-dropdown');
+                dropdown.classList.toggle('hidden');
+                document.getElementById('meeting-requests-dropdown').classList.add('hidden');
+            });
+
+            // Modal controls
+            document.getElementById('close-modal').addEventListener('click', closeEmailModal);
+            document.getElementById('cancel-meeting').addEventListener('click', closeEmailModal);
+            document.getElementById('send-invitation').addEventListener('click', sendMeetingInvitation);
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', (e) => {
+                const requestsDropdown = document.getElementById('meeting-requests-dropdown');
+                const requestsButton = document.getElementById('meeting-requests-btn');
+                const notificationsDropdown = document.getElementById('notifications-dropdown');
+                const notificationsButton = document.getElementById('notifications-btn');
+
+                if (!requestsDropdown.contains(e.target) && !requestsButton.contains(e.target)) {
+                    requestsDropdown.classList.add('hidden');
+                }
+                if (!notificationsDropdown.contains(e.target) && !notificationsButton.contains(e.target)) {
+                    notificationsDropdown.classList.add('hidden');
+                }
+            });
+
+            // Auto-refresh data every 30 seconds
+            setInterval(() => {
+                updateStats();
+                loadNotifications();
+                renderMeetingRequests();
+            }, 30000);
+        });
+
+        // Global functions for inline event handlers
+        window.handleMeetingRequestAction = handleMeetingRequestAction;
+        window.showMemberTooltip = showMemberTooltip;
+        window.hideMemberTooltip = hideMemberTooltip;
+        window.openTeamEmailModal = openTeamEmailModal;
+        window.openEmailModal = openEmailModal;
+        window.handleMemberPagination = handleMemberPagination;
+    </script>
+</body>
+
+</html>
