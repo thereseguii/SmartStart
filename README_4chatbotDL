@@ -1,0 +1,7 @@
+1. Install Hugging Face libraries
+Make sure you have Python installed (preferably 3.8+). Then open a terminal (Command Prompt, PowerShell, or VS Code terminal) and run:
+pip install transformers datasets huggingface_hub
+
+2. (Optional) CLI download
+You can also use the Hugging Face CLI. First install it:
+pip install huggingface_hub
